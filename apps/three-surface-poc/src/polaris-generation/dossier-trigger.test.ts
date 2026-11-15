@@ -270,7 +270,11 @@ describe('with every record satisfied', () => {
     expect(first.slice(1).every(entry => entry.endsWith(':redis-redis'))).toBe(true);
     expect(seen!.projectId).toBe('redis-redis');
     expect(JSON.parse(readFileSync(join(out, 'run-record.json'), 'utf8')).target.repositoryId).toBe('redis-redis');
-    const cases: [unknown, string][] = [[[], 'no observation record names'], [['a-b', 'c-d'], 'ambiguous'], [['rid', 'rid'], 'ambiguous'], [['bad id!'], 'malformed repository id'],
+    // 046's identity grammar, '.' included, as the admission reader now answers it (R-PDJA-33-RULINGS-2 finding 1).
+    const dotted = await runDossierTrigger('https://github.com/fixture/repo.git', base({ outDir: join(tempDir('trigger-dotted-'), 'out'), records: store(['nodejs-node.js']), runPipeline: async () => stoppedResult }));
+    expect(dotted).toMatchObject({ state: 'generation-stopped', target: { repositoryId: 'nodejs-node.js' } });
+    asked.splice(0);
+    const cases: [unknown, string][] = [[[], 'no observation record names'], [['a-b', 'c-d'], 'ambiguous'], [['rid', 'rid'], 'ambiguous'], [['bad id!'], 'malformed repository id'], [['a b'], 'malformed repository id'], [['a/b'], 'malformed repository id'],
       [['rid', 42], 'ambiguous'], [['rid', ''], 'ambiguous'], [['rid', 'bad id!'], 'ambiguous'], [[42], 'malformed repository id'], [[''], 'malformed repository id'],
       ['rid', 'malformed answer'], [{ length: 1, 0: 'rid' }, 'malformed answer'], [null, 'malformed answer'], [undefined, 'malformed answer']];
     for (const [found, text] of cases) {

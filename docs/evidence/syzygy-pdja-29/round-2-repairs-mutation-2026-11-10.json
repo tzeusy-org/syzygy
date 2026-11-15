@@ -1,0 +1,81 @@
+{
+  "subject": "round-2 repairs of public-git-source-acquisition-local-agent v1.1 (syzygy-pdja.29)",
+  "commit_base": "5236223d295022fa96f1fe1432d69da75f608796",
+  "note": "run against the uncommitted working tree on top of commit_base",
+  "file_sha256_restored": {
+    "scripts/record_versioned_signoff.py": "38c1adb547330d095dc6a42fb02f9b1142772dd62c0e25b1c483ba83a4c5e46e",
+    "scripts/build_public_git_source_acquisition_local_agent_v1_1.py": "187305ddfa29141e476b865261da612f5834deb376d8c1329e378e4de1170249"
+  },
+  "mutants": [
+    {
+      "id": "R2-F4a (round-2 raw's survivor)",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "    \"version 1.0 it widens, in a copy-class run alone, local execution and a local\\n\"\n    \"write: the Git",
+      "new": "    \"version 1.0 it widens, in a copy-class run alone, nothing new: \\n\"\n    \"write: the Git",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL the real registry entry v1.1 carries its own scope, supersession and does-not text, and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R2-F4b scope text",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "\"declaration names; nothing wider\")\nGIT_SOURCE_V11_SUPERSESSION",
+      "new": "\"declaration names; nothing\")\nGIT_SOURCE_V11_SUPERSESSION",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL the real registry entry v1.1 carries its own scope, supersession and does-not text, and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R2-F4c supersession text",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "\"that version and its bytes; revoked only by a later exact owner act naming it\")\nGIT_SOURCE_V11_DOES_NOT",
+      "new": "\"that version; revoked only by a later exact owner act naming it\")\nGIT_SOURCE_V11_DOES_NOT",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL the real registry entry v1.1 carries its own scope, supersession and does-not text, and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R2-F4d aggregate text",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "\n    \"write, as its record says. It authorizes no implementation, and a later version\\n\"",
+      "new": "\n    \"write. It authorizes no implementation, and a later version\\n\"",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL the real registry entry v1.1 carries its own scope, supersession and does-not text, and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R2-F1a exact check off for readAuthority",
+      "file": "scripts/build_public_git_source_acquisition_local_agent_v1_1.py",
+      "old": "                                 (\"readAuthority\", ra, ((\"v1.0's text\", kept_ra),) + RA_TAIL_CLAUSES),\n",
+      "new": "",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --selftest",
+      "exit": 1,
+      "summary": "selftest: 49 of 55 predicates held",
+      "failing": [
+        "FAIL (F5 M1) launch read (3) widened to include paths refused",
+        "FAIL (F5 M2) launch read (5) widened to object headers refused",
+        "FAIL (F5 M5) every reference's value read refused",
+        "FAIL launch reads read whether or not the requirements in force name them refused"
+      ],
+      "killed": true
+    }
+  ],
+  "killed": 5,
+  "total": 5
+}

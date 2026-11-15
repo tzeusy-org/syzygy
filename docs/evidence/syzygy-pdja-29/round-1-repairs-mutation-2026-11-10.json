@@ -1,0 +1,133 @@
+{
+  "subject": "round-1 repairs of public-git-source-acquisition-local-agent v1.1 (syzygy-pdja.29)",
+  "commit_base": "5c9391502a15d18e88ffb031645afd94c70fe652",
+  "note": "run against the uncommitted working tree on top of commit_base",
+  "file_sha256_restored": {
+    "scripts/record_versioned_signoff.py": "30f16f0fa731770d751bd1b5ac571acbe4b4718ea54ca72bc00801175101d475",
+    "scripts/build_public_git_source_acquisition_local_agent_v1_1.py": "f69ad3264c1bfba9e217823e32243917a4def2c3845557432e5e605f044ae404"
+  },
+  "mutants": [
+    {
+      "id": "M-F3a",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "            if beh.digest(pkg.replaced_bytes(root)) != replaced_sha:",
+      "new": "            if False:",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL a replaced version's record with a forged SHA-256 line fails --check, held to the later version's base bytes; one naming no such bytes fails closed"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M-F3b",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "            if pkg.replaced_bytes is None:\n                raise ValueError(\"a later version replaced this entry, and this package names no \"\n                                 \"bytes to hold the record's SHA-256 to\")\n            if beh.digest(pkg.replaced_bytes(root)) != replaced_sha:\n                raise ValueError(\"the record's installed SHA-256 is not the SHA-256 of the bytes the \"\n                                 \"later version takes as its base\")\n",
+      "new": "",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL a replaced version's record with a forged SHA-256 line fails --check, held to the later version's base bytes; one naming no such bytes fails closed"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M-F2a",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "f\"Scope: {pkg.record_scope or SCOPE_FIXED}",
+      "new": "f\"Scope: {SCOPE_FIXED}",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL a version's own scope, supersession and does-not text replace the fixed lines in its record and aggregate, and the fixed lines stay for a version naming none"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M-F2b",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "    if pkg.record_does_not is not None:\n        return pkg.record_does_not\n",
+      "new": "",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL a version's own scope, supersession and does-not text replace the fixed lines in its record and aggregate, and the fixed lines stay for a version naming none"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M-F2c",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "    if pkg.record_aggregate_scope is not None:\n        return pkg.record_aggregate_scope\n",
+      "new": "",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL a version's own scope, supersession and does-not text replace the fixed lines in its record and aggregate, and the fixed lines stay for a version naming none"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M-F2d",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "f\"Supersession / revocation: {pkg.record_supersession or SUPERSESSION_FIXED}",
+      "new": "f\"Supersession / revocation: {SUPERSESSION_FIXED}",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL a version's own scope, supersession and does-not text replace the fixed lines in its record and aggregate, and the fixed lines stay for a version naming none"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M-F5a",
+      "file": "scripts/build_public_git_source_acquisition_local_agent_v1_1.py",
+      "old": "        departs = exact_departure(value, clauses)\n",
+      "new": "        departs = None\n",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --selftest",
+      "exit": 1,
+      "summary": "selftest: 45 of 53 predicates held",
+      "failing": [
+        "FAIL (F5 M1) launch read (3) widened to include paths refused",
+        "FAIL (F5 M2) launch read (5) widened to object headers refused",
+        "FAIL (F5 M3) the copy's directory placed anywhere on the host refused",
+        "FAIL (F5 M4) the fetch source widened to the clone's remotes refused"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M-F5b",
+      "file": "scripts/build_public_git_source_acquisition_local_agent_v1_1.py",
+      "old": "    return None if at == len(value) else \"added text\"",
+      "new": "    return None",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --selftest",
+      "exit": 1,
+      "summary": "selftest: 52 of 53 predicates held",
+      "failing": [
+        "FAIL a clause appended to stateDirectoryWrites refused"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M-F1",
+      "file": "scripts/build_public_git_source_acquisition_local_agent_v1_1.py",
+      "old": "        out.append(\"fetch does not define the run classes in the entry's own words\")",
+      "new": "        pass",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --selftest",
+      "exit": 1,
+      "summary": "selftest: 52 of 53 predicates held",
+      "failing": [
+        "FAIL a fetch whose run classes rest on #812's words alone refused"
+      ],
+      "killed": true
+    }
+  ],
+  "killed": 9,
+  "total": 9
+}

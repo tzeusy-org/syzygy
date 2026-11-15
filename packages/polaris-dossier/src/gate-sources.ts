@@ -1,12 +1,13 @@
 import {
   LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, createPackageAdmissionRecordsPort, readDigestBoundActState, readPolicyActChain, readVersionedSignoffState,
   DECISIONS_DIR, SLOT, recorderTemplate,
-  type ActState, type ConsentedRevision, type DigestBoundAct, type DigestBoundActForm, type ExemptRecord, type PackageReaderFs, type RecorderTemplate,
+  type ActState, type ConsentedRevision, type DigestBoundAct, type DigestBoundActForm, type ExemptRecord, type ObservationRecordSummary, type PackageReaderFs, type RecorderTemplate,
   type VersionedSignoffForm,
 } from '@syzygy/polaris-generation-consent/live';
 import { readdir } from 'node:fs/promises';
 import * as path from 'node:path';
 import type { DrawerStatement } from './governed.js';
+import { normaliseUrl } from './launch-identity.js';
 
 /** The records Syzygy's start gates read (REQ-polaris-generation-033, 036), each re-read on every call and never cached.
  *
@@ -48,12 +49,21 @@ export interface ProviderStatementSource {
 export interface GateSources {
   /** Where the records are read from, for the disclosure. */
   readonly recordsRoot: string;
-  /** Repository ids of the observation consents in force whose `Upstream:` is exactly the URL. */
+  /** Repository ids of the observation consents in force whose `Upstream:` URL, normalised by REQ-polaris-generation-046's rule, equals
+   * `url`, a normalised locator (host and whole path), for every host (line 17). */
   readonly repositoryIdsFor: (url: string) => Promise<readonly string[]>;
-  /** Why no observation consent in force names the URL, for a refusal's reason only (R-POLARIS-DOSSIER-S3-GATES-1 finding 4). */
+  /** Why no observation consent in force names the normalised URL, for a refusal's reason only (R-POLARIS-DOSSIER-S3-GATES-1 finding 4). */
   readonly consentAbsenceFor?: (url: string) => Promise<string>;
   readonly consentedRevisionsFor: (repositoryId: string) => Promise<readonly ConsentedRevision[]>;
   readonly observationConsentFor: (repositoryId: string, revision: string) => Promise<ConsentAnswer>;
+  /** Whether an in-force observation consent made by any act of these sources names `revision`, whatever its repository: the class rule of
+   * REQ-polaris-generation-047 ("unless its named identifier is named by an in-force observation consent made by another act"). It reads the
+   * same records as `observationConsentFor` and nothing else. */
+  readonly observationConsentNaming: (revision: string) => Promise<ConsentAnswer>;
+  /** Every observation consent these sources hold, in any state, with its subject, `Upstream:` URL as written and admitted revisions:
+   * the records "made by any other act" that REQ-polaris-generation-046 matches by identity, by normalised `Upstream:` URL, by the pinned
+   * revision or by a parent. Refused, never empty, when the records cannot be read. Grants nothing. */
+  readonly observationRecords: () => Promise<{ readonly ok: true; readonly records: readonly ObservationRecordSummary[] } | { readonly ok: false; readonly why: string }>;
   readonly registryEntry: () => Promise<GateState>;
   /** The classification and screening policy that covers public sources: one policy file carries both (the public-source scope of
    * `project:syzygy`'s secret-classification policy), under one act chain. */
@@ -62,7 +72,14 @@ export interface GateSources {
   readonly rfc720Ruling: () => Promise<GateState>;
   readonly projectInput: ProjectInputSource;
   readonly providerStatements: ProviderStatementSource;
+  /** These sources without launch consent records, where they were added (`withLaunchRecords`): what "an observation consent made by
+   * another act" is decided from (REQ-polaris-generation-047's first branch and class rule; 046's records "made by any other act").
+   * Absent, these sources hold no launch record. */
+  readonly otherActs?: GateSources;
 }
+
+/** The sources an "another act" decision reads: never a launch consent record (R-PDJA-33-SLICE-B-1 finding 1). */
+export const otherActsOf = (sources: GateSources): GateSources => sources.otherActs ?? sources;
 
 /** The implementation the source-acquisition registry entry must name for the dossier's reads (git-object-reader.ts): the local-agent
  * entry, signed off by version tag (`LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM`), names it with implementation version 1.0.0. */
@@ -461,6 +478,9 @@ export interface PackageGateSourceOptions {
  * consents, the policy chain, the registry entry's version-tagged sign-off, D9 and the RFC7-20 reading, and the drawer and provider
  * statements of the local-agent sitting. With no act recorded each states nothing: D9 and the reading are not established, the
  * drawer is unstated and no statement exists. `projectInput` and `providerStatements` replace the package sources (tests). */
+/** Whether a record's `Upstream:` URL, normalised by the same rule, is the normalised locator `url`, host and whole path. */
+const upstreamIs = (upstream: string | null, url: string): boolean => upstream !== null && normaliseUrl(upstream)?.url === url;
+
 export function createPackageGateSources(options: PackageGateSourceOptions): GateSources {
   const fsOption = options.fs === undefined ? {} : { fs: options.fs };
   const port = createPackageAdmissionRecordsPort({ root: options.root, now: options.now, ...fsOption });
@@ -500,11 +520,30 @@ export function createPackageGateSources(options: PackageGateSourceOptions): Gat
   };
   return {
     recordsRoot: options.root,
-    repositoryIdsFor: url => port.repositoryIdsFor(url),
-    ...(port.consentAbsenceFor === undefined ? {} : { consentAbsenceFor: port.consentAbsenceFor }),
+    // By the whole normalised `Upstream:` URL, for every host (046, line 17), from the port's own listing of its records.
+    repositoryIdsFor: async url => {
+      const read = port.observationRecords === undefined ? null : await port.observationRecords();
+      if (read === null || !read.ok) return [];
+      return [...new Set(read.records.filter(r => r.state === 'in force' && upstreamIs(r.upstream, url)).map(r => r.repositoryId))].sort();
+    },
+    consentAbsenceFor: async url => {
+      const read = port.observationRecords === undefined ? { ok: false as const, why: 'the admission records port cannot list its observation records' } : await port.observationRecords();
+      if (!read.ok) return `${read.why}, so no consent can be established`;
+      const naming = read.records.filter(r => upstreamIs(r.upstream, url));
+      if (naming.length === 0) return `no observation record's Upstream normalises to ${url}`;
+      const each = naming.map(r => `${r.record} ${r.state === 'in force' ? 'is in force' : r.state}`).join('; ');
+      return naming.every(r => r.state !== 'in force') ? `the observation record(s) whose Upstream normalises to ${url} are not in force: ${each}` : `the observation record(s) whose Upstream normalises to ${url}: ${each}`;
+    },
     consentedRevisionsFor: repositoryId => port.consentedRevisionsFor(repositoryId),
     observationConsentFor: async (repositoryId, revision) => {
       const answer = await port.check({ kind: 'observation-consent', repositoryId, revision });
+      return answer.satisfied ? { satisfied: true, record: answer.record } : { satisfied: false, why: answer.why };
+    },
+    observationRecords: async () => (port.observationRecords === undefined
+      ? { ok: false, why: 'the admission records port cannot list its observation records' } : port.observationRecords()),
+    observationConsentNaming: async revision => {
+      if (port.observationConsentNaming === undefined) return { satisfied: false, why: 'the admission records port cannot answer by revision alone' };
+      const answer = await port.observationConsentNaming(revision);
       return answer.satisfied ? { satisfied: true, record: answer.record } : { satisfied: false, why: answer.why };
     },
     registryEntry: async () => {

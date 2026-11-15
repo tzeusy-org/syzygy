@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 38,
-      "scenarios": 302,
+      "scenarios": 329,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1073,6 +1073,16 @@
             "Re-identified clone",
             "A changed URL keeps the recorded identity",
             "Matching records disagree on identity",
+            "Locator on another host over ssh",
+            "GitHub identities keep their form",
+            "Same-named repository on two hosts",
+            "Consent found by its upstream URL",
+            "Remote or given URL over http or git",
+            "Credentials in a given URL",
+            "Credentials in a remote URL",
+            "Locator not admitted",
+            "Remote URL that is not a locator",
+            "Visibility on another host",
             "Pre-answer classes shown as a preview",
             "Write consent absent",
             "Self-observation keeps the trunk tip stable",
@@ -1091,7 +1101,24 @@
             "Trunk named master",
             "No trunk",
             "Explicit revision",
-            "HEAD elsewhere"
+            "HEAD elsewhere",
+            "HEAD elsewhere in a no-copy run",
+            "Existing full clone at the trunk tip",
+            "Repeat run at a launch-consented HEAD",
+            "Revision with launch records while HEAD is at another act's revision",
+            "Repeat run under a launch consent recorded by version 1.1",
+            "SHA-256 clone",
+            "Several remote defaults",
+            "Local branch ahead of the remote default",
+            "Partial clone missing an object",
+            "Clone with an alternate",
+            "Configuration and hooks of the operator's clone",
+            "Revision naming an annotated tag",
+            "Revision naming a blob",
+            "Commit whose checkout fails",
+            "Ambiguous abbreviation",
+            "References in the reftable backend",
+            "A consent that states the clone's form"
           ]
         }
       }

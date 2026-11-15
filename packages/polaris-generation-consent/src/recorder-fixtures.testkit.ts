@@ -58,7 +58,8 @@ for key in dossier_keys:
     t['dossier-local-agent:' + key] = dla.render_act(dla.ACT_BY_KEY[key], A, D, 'b'*64, 'c'*40, 'CONFIRM', dla.Selection('opening', 'label', 'description'), 'f'*40, I)
 t['provider-v2'] = pv2.render_act(pv2.ACT, A, D, 'b'*64, 'c'*40, V, pv2.Selection('opening', 'label', 'description', pv2.PACKET_WORDS[0]), 'f'*40, I, SUP, SUPD)
 t['registry'] = reg.render_act(reg.ACT_BY_KEY['git-source-acquisition'], A, D, 'b'*64, 'c'*40, 'CONFIRM', reg.Selection('opening', 'label', 'description'), 'f'*64, I)
-pkg = vs.real_packages()['public-git-source-acquisition-local-agent']
+pkgs = vs.real_packages()
+pkg, pkg11 = pkgs['public-git-source-acquisition-local-agent'], pkgs['public-git-source-acquisition-local-agent@1.1']
 digest = vs.beh.digest
 vs.beh.digest = lambda data: SHA
 try:
@@ -68,15 +69,16 @@ try:
         entry.write_bytes(b'')
         for state, root in (('present', present), ('absent', absent)):
             for named, disposition in (('none', None), ('named', DISP)):
-                t['signoff:' + state + ':' + named] = vs.render_record(pkg, '1.0', D, 'Extend Scope A and sign off v1.0', 'docs/reviews/R-STUB-RAW.md', 'c'*40, V, disposition, root=pathlib.Path(root), instant=I)
+                t['signoff:1.0:' + state + ':' + named] = vs.render_record(pkg, '1.0', D, 'Extend Scope A and sign off v1.0', 'docs/reviews/R-STUB-RAW.md', 'c'*40, V, disposition, root=pathlib.Path(root), instant=I)
+                t['signoff:1.1:' + state + ':' + named] = vs.render_record(pkg11, '1.1', D, 'Extend Scope A and sign off v1.1', 'docs/reviews/R-STUB-RAW.md', 'c'*40, V, disposition, root=pathlib.Path(root), instant=I)
 finally:
     vs.beh.digest = digest
-paths = {'acts': {k: a.record.as_posix() for k, a in dla.ACT_BY_KEY.items()}, 'signoff': vs.record_rel(pkg, '1.0').as_posix()}
+paths = {'acts': {k: a.record.as_posix() for k, a in dla.ACT_BY_KEY.items()}, 'signoff': vs.record_rel(pkg11, '1.1').as_posix(), 'signoffV10': vs.record_rel(pkg, '1.0').as_posix()}
 sys.stdout.write(json.dumps({'templates': t, 'paths': paths, 'installed': pkg.installed.as_posix()}))`;
 
 interface Rendered {
   readonly templates: Readonly<Record<string, string>>;
-  readonly paths: { readonly acts: Readonly<Record<DossierLocalAgentActKey, string>>; readonly signoff: string };
+  readonly paths: { readonly acts: Readonly<Record<DossierLocalAgentActKey, string>>; readonly signoff: string; readonly signoffV10: string };
   readonly installed: string;
 }
 
@@ -156,10 +158,20 @@ export function renderProviderV2Act(argument: string, date: string, instant: str
   return fill('provider-v2', { argument, date, instant, superseded, supersededDate, verdict });
 }
 
-/** The version-tagged sign-off record of the local-agent source-acquisition entry, v1.0, as scripts/record_versioned_signoff.py renders
- * it over the entry installed under `root` (the record carries the SHA-256 of those bytes, or `absent` when `root` holds no entry
- * file), with the given verdict and disposition record (none when null). Reads `root` at each call. */
+/** The version-tagged sign-off record of the local-agent source-acquisition entry, v1.1 (the gate's version), as
+ * scripts/record_versioned_signoff.py renders it over the entry installed under `root` (the record carries the SHA-256 of those bytes,
+ * or `absent` when `root` holds no entry file), with the given verdict and disposition record (none when null). Reads `root` at each
+ * call. */
 export function renderLocalAgentSignoff(root: string, date: string, instant: string, verdict = 'CONFIRM', disposition: string | null = null): string {
+  return renderSignoff('1.1', root, date, instant, verdict, disposition);
+}
+
+/** As `renderLocalAgentSignoff`, for version 1.0, the record the v1.1 sign-off supersedes and leaves in place. */
+export function renderLocalAgentSignoffV10(root: string, date: string, instant: string, verdict = 'CONFIRM', disposition: string | null = null): string {
+  return renderSignoff('1.0', root, date, instant, verdict, disposition);
+}
+
+function renderSignoff(version: '1.0' | '1.1', root: string, date: string, instant: string, verdict: string, disposition: string | null): string {
   // The recorder writes `disposition or "none"`: an empty disposition would read as none there and as itself here.
   if (disposition === '') throw new Error('recorder render failed: an empty disposition renders as none');
   const entry = path.join(root, forms().installed);
@@ -174,14 +186,14 @@ export function renderLocalAgentSignoff(root: string, date: string, instant: str
     if (!PATHLIB_NO_FILE.has((error as NodeJS.ErrnoException).code ?? '')) throw error;
   }
   const installed = stat?.isFile() === true ? readFileSync(entry) : null;
-  const id = `signoff:${installed === null ? 'absent' : 'present'}:${disposition === null ? 'none' : 'named'}`;
+  const id = `signoff:${version}:${installed === null ? 'absent' : 'present'}:${disposition === null ? 'none' : 'named'}`;
   return fill(id, { date, instant, verdict, ...(disposition === null ? {} : { disposition }), ...(installed === null ? {} : { sha: sha256(installed) }) });
 }
 
-/** Where the recorders write each record, relative to the repository root: the five sitting acts (`Act.record`) and the v1.0
- * sign-off (`record_rel`). A reader keyed on another file name would read a recorded act as absent. */
-export function recorderRecordPaths(): { readonly acts: Readonly<Record<DossierLocalAgentActKey, string>>; readonly signoff: string } {
-  return { acts: { ...forms().paths.acts }, signoff: forms().paths.signoff };
+/** Where the recorders write each record, relative to the repository root: the five sitting acts (`Act.record`), the v1.1 sign-off
+ * and the v1.0 sign-off it supersedes (`record_rel`). A reader keyed on another file name would read a recorded act as absent. */
+export function recorderRecordPaths(): { readonly acts: Readonly<Record<DossierLocalAgentActKey, string>>; readonly signoff: string; readonly signoffV10: string } {
+  return { acts: { ...forms().paths.acts }, signoff: forms().paths.signoff, signoffV10: forms().paths.signoffV10 };
 }
 
 /** Alterations of an act record that leave every head field as it was (syzygy-bpyt.8.10): the first paragraph of its Effect (`What

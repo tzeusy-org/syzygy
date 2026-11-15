@@ -97,6 +97,8 @@ export function noOtherActs(): GateSources {
     repositoryIdsFor: async () => [],
     consentedRevisionsFor: async () => [],
     observationConsentFor: async () => ({ satisfied: false, why: 'no other act' }),
+    observationConsentNaming: async () => ({ satisfied: false, why: 'no other act' }),
+    observationRecords: async () => ({ ok: true, records: [] }),
     registryEntry: async () => ({ state: 'ok', record: 'REGISTRY-FIXTURE' }),
     screeningPolicy: async () => ({ state: 'ok', record: 'POLICY-FIXTURE' }),
     d9: async () => ({ state: 'absent', why: 'fixture' }),

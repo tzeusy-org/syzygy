@@ -48,7 +48,7 @@ authority and no model yet called on the current path.
     and the adopted
     [non-governed narrative profile](openspec/changes/polaris-non-governed-narrative-profile/specs/polaris-generation/spec.md)
     ([adoption record](.syzygy/governance/decisions/POLARIS-NON-GOVERNED-NARRATIVE-PROFILE-ADOPTION.md)):
-    34 requirements and 222 scenarios without the signed-off
+    34 requirements and 249 scenarios without the signed-off
     [dossier local-agent addition](openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md);
@@ -57,10 +57,11 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    38 requirements and 302 scenarios in the effective composition with it and with the signed-off
+    38 requirements and 329 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
-    [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md)).
+    [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
+    [v1.2 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.2.md)).
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
     design carry present-tense status since the 2026-09-29
     [readability successor](.syzygy/governance/decisions/POLARIS-UNDERSTANDING-READABILITY-SUCCESSOR-ACT.md).
@@ -423,6 +424,7 @@ python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.6   # dossier local-agent sign-off, v1.6 2026-11-09 (changed-block list for later fidelity rounds): record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.0   # dossier launch-consent sign-off, v1.0 2026-11-08: record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.1   # dossier launch-consent sign-off, v1.1 2026-11-08: record, aggregate block and applied tree
+python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.2   # dossier launch-consent sign-off, v1.2 2026-11-11: record, aggregate block and applied tree
 # Lane B and its RFC-0007 successor are declined (decisions/POLARIS-LANE-B-DECLINED-AND-TARGET-REVISED-DIRECTION.md); their checks left the battery.
 python3 scripts/record_pwb_behavior_amendment_acts.py --check render-mode 527be5ac3732619608355ae9658c92cee45341e831521bc526398481dd915785 --date 2026-10-02   # render-mode act, performed 2026-10-02: record, aggregate block and applied tree
 python3 scripts/record_pwb_behavior_amendment_acts.py --check machine-view acabc7915e4461186b5878ce40cc0c62ed7cf91eadd7eead1cb179c80f672e72 --date 2026-10-02   # machine-view act, performed 2026-10-02: record, aggregate block and applied tree
@@ -455,6 +457,8 @@ python3 scripts/build_polaris_dossier_launch_consent.py --check   # dossier laun
 python3 scripts/build_polaris_dossier_launch_consent.py --selftest   # dossier launch-consent builder fixtures
 python3 scripts/build_polaris_dossier_launch_consent_v1_1.py --check   # dossier launch-consent v1.1 package: unapplied or applied
 python3 scripts/build_polaris_dossier_launch_consent_v1_1.py --selftest   # dossier launch-consent v1.1 builder fixtures
+python3 scripts/build_polaris_dossier_launch_consent_v1_2.py --check   # dossier launch-consent v1.2 package: unapplied or applied
+python3 scripts/build_polaris_dossier_launch_consent_v1_2.py --selftest   # dossier launch-consent v1.2 builder fixtures
 python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b212d6972ee4754e40682450e59a6c3245546d5c46 --date 2026-10-01   # opening-band act, performed 2026-10-01: record, aggregate block and applied subjects regenerate exactly
 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --check   # registry amendment, performed 2026-09-30, superseded 2026-10-02: the re-pinned subject reverses to its proposed bytes
 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --selftest
@@ -504,6 +508,7 @@ python3 scripts/render_launch_administration.py $DR --check
 git tag --list 'doctrine-*'
 python3 scripts/record_rfc5_project_documentation_act.py --check a69a606cc7c14da5de03ec26aaec435af2fee3fa4c7bfb8a92fc30deefa40c91 --date 2026-10-07 --question-opening 'Do you sign the RFC5-14 project-documentation class amendment at its row of the contract amendment manifest?' --selection-label 'Sign it, at the manifest row; direct the SOURCE-POLICY.md readability successor' --selection-description 'Act form 1, which makes screening scope version 2 performable; the six-class sentence in SOURCE-POLICY.md gets a readability successor.'   # rfc5 --check
 python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.0   # public-git-source-acquisition-local-agent v1.0 --check
+python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.1   # public-git-source-acquisition-local-agent v1.1 sign-off 2026-11-11: record, aggregate block and applied entry
 python3 scripts/record_dossier_local_agent_acts.py --check redis-agent-anthropic fbbcd3c0e3d49aab3384a4ab18bf35816dbd8fb952e658d1edbac3d1c50e48a7 --date 2026-10-07 --question-opening 'Which statement do you sign for Redis at its row of the dossier local-agent acts manifest?' --selection-label 'Anthropic provider statement' --selection-description 'Claude Code may receive Redis content even if Redis counts as governed.'   # redis-agent-anthropic --check
 python3 scripts/record_dossier_agent_provider_v2_act.py --check b7a8d099ce108bfd70133b729327534f29806cb0118ee0b3e0f9ca077a946df3 --date 2026-10-08 --question-opening 'Decision 2 (P-106):'' your Redis Anthropic provider statement predates the README/docs class, so Syzygy withholds docs text from the packets it gives your own Claude Code sessions, and README-based claims render Unknown. Version 2 adds `project-documentation` and changes nothing else. Sign it?' --selection-label 'Sign version 2 (Recommended)' --selection-description 'Docs text goes to your own Claude Code sessions, which can already read the whole clone. Phrase:'' "Sign the Redis Anthropic provider statement, version 2".' --packet-words 'Sign the Redis Anthropic provider statement, version 2'   # agent-provider statement version 2 --check
 python3 scripts/record_dossier_agent_provider_v2_act.py --selftest   # agent-provider statement version 2 --selftest
@@ -517,7 +522,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and thirty-nine checks above are the same one hundred and thirty-nine the hosted workflow runs
+The one hundred and forty-three checks above are the same one hundred and forty-three the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

@@ -133,6 +133,39 @@ const MISSING_DATE_REASON = 'wait mode cannot be authorized by the local-agent s
 const INVALID_DATE_REASON = 'wait mode cannot be authorized by the local-agent sign-off because its Date is duplicate, misplaced, malformed or not a real calendar day; hand each session over with session-prompt as signed in v1.1';
 const INVALID_EVALUATION_REASON = 'wait mode cannot be evaluated because this operation has no finite, representable evaluation instant; hand each session over with session-prompt as signed in v1.1';
 
+describe('launch.json\'s brief stage (the owner\'s ruling of 2026-11-14, "Update launch.json")', () => {
+  it('init writes the not-reached form; brief and session-prompt all rewrite it to each brief they issue, every other field byte-identical', async () => {
+    const h = await harness();
+    const file = path.join(h.run, 'launch.json');
+    const reached = (id: string, which: string) => ({ id, stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred', text: `${which} Syzygy issued named the operator's clone as the run's clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.` });
+    const briefed = fs.readFileSync(file, 'utf8');
+    const doc = JSON.parse(briefed) as { statements: { stage: string }[] };
+    expect(doc.statements.filter(s => s.stage === 'brief or packet delivered')).toEqual([reached('briefs/authoring', 'The authoring brief')]);
+    expect((await h.cli(['session-prompt', h.run, 'all'])).exit).toBe(0);
+    const started = fs.readFileSync(file, 'utf8');
+    const statements = [...doc.statements, reached('briefs/inventory-1', 'The inventory brief for session 1')];
+    expect(started).toBe(`${JSON.stringify({ ...doc, statements }, null, 2)}\n`);
+    expect(JSON.parse(fs.readFileSync(path.join(h.run, 'inventory', 'session-1.json'), 'utf8')).stageStatement).toEqual(reached('briefs/inventory-1', 'The inventory brief for session 1'));
+    expect(fs.readdirSync(h.run).filter(name => name.endsWith('.tmp'))).toEqual([]);
+  });
+
+  it('a launch.json not in init\'s exact form is left as it is; the sessions stay prepared, and the refusal says the two disagree', async () => {
+    const h = await harness();
+    const file = path.join(h.run, 'launch.json');
+    const compact = JSON.stringify(JSON.parse(fs.readFileSync(file, 'utf8')));
+    fs.writeFileSync(file, compact);
+    const result = await h.cli(['session-prompt', h.run, 'all']);
+    expect(result.exit).toBe(1);
+    expect(result.doc).toMatchObject({ outcome: 'refused', stage: 'write',
+      reason: 'the waiting sessions were prepared and inventory session 1\'s brief was issued, and their files stay, but the run\'s launch.json is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical, so the run record does not say it was issued and every page says the two disagree' });
+    expect(fs.readFileSync(file, 'utf8')).toBe(compact);
+    expect(fs.existsSync(path.join(h.run, 'inventory', 'session-1.json'))).toBe(true);
+    // The sessions were issued, so their step is logged though the rewrite refused (R-PDJA-33-RULINGS-1 finding 7).
+    const last = JSON.parse(fs.readFileSync(path.join(h.run, 'steps.jsonl'), 'utf8').trim().split('\n').at(-1)!);
+    expect(last).toMatchObject({ step: 'session-prompt', outcome: 'issued', role: 'all' });
+  });
+});
+
 describe('the v1.2 gate', () => {
   it('refuses session-prompt all, await and a delivery while v1.2 is not signed off (mutant: drop the signed check)', async () => {
     const h = await harness();
@@ -537,6 +570,9 @@ describe('session-prompt <run> all', () => {
     }
     const brief = fs.readFileSync(path.join(h.sessions, 'session-1', 'inventory-brief.md'));
     expect(readJson(path.join(h.run, 'inventory', 'session-1.json'))['brief']).toEqual({ name: 'inventory-brief.md', sha256: sha256(brief) });
+    // The inventory brief's own brief-stage statement, stored when Syzygy issued it (R-PDJA-33-SLICE-D-1 finding 5): this run names no copy.
+    expect(readJson(path.join(h.run, 'inventory', 'session-1.json'))['stageStatement']).toEqual({ id: 'briefs/inventory-1', stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred',
+      text: 'The inventory brief for session 1 Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' });
   });
 
   it('prints each command with only its role\'s permission rules and SEC-3\'s rule, never a permission (mutant: drop a rule or widen one)', async () => {

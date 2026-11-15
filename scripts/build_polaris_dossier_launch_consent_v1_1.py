@@ -41,7 +41,9 @@ The CLI writes nothing. The sign-off recorder
 --version 1.1``) is the one writer: it verifies the reviewed bytes and calls
 ``apply()``, which applies the patch, rewrites both figures on the status
 page with the local-agent builder's ``refigure()`` and names the v1.1 record
-beside v1.0's. Regenerating the change's union and the reconciliation census
+beside v1.0's. Once the v1.2 package exists, ``_copy_targets()`` peels its
+applied patch, so this layer is read beneath it, and ``signed_findings()``
+delegates to the v1.2 builder when v1.2 or later is recorded. Regenerating the change's union and the reconciliation census
 (``check_spec_reconciliation.py --regenerate``) follows the recording, as it
 did for v1.0. A candidate commit, review or merge performs no owner act.
 
@@ -134,9 +136,27 @@ def review_digest(root: pathlib.Path, record: pathlib.Path) -> str | None:
 
 # --- the patch in a scratch copy ---------------------------------------------
 
+def peeled(root: pathlib.Path) -> dict[pathlib.Path, bytes] | None:
+    """The v1.1 layer, with an applied v1.2 patch reversed, or None when there is none to peel."""
+    import build_polaris_dossier_launch_consent_v1_2 as v12
+    if not (root / v12.CANDIDATE).is_dir():
+        return None
+    return v12.backward(root)
+
+
+def _spec(root: pathlib.Path) -> bytes:
+    later = peeled(root)
+    return later[SPEC] if later is not None else (root / SPEC).read_bytes()
+
+
 def _copy_targets(root: pathlib.Path, scratch: pathlib.Path) -> None:
+    """The v1.1 layer, with any applied v1.2 patch peeled off."""
+    later = peeled(root)
     for rel in TARGETS:
-        if (root / rel).is_file():
+        if later is not None:
+            (scratch / rel).parent.mkdir(parents=True, exist_ok=True)
+            (scratch / rel).write_bytes(later[rel])
+        elif (root / rel).is_file():
             (scratch / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(root / rel, scratch / rel)
 
@@ -236,7 +256,7 @@ def check(root: pathlib.Path = ROOT) -> list[str]:
         assert before is not None  # state() found it reversible
         if signed is not None and sha(before[SPEC]) != signed:
             findings.append(f"reversing the v{VERSION} patch does not restore the v1.0 signed bytes")
-        findings += _shape((root / SPEC).read_bytes(), SPEC.as_posix())
+        findings += _shape(_spec(root), SPEC.as_posix())
     return findings
 
 
@@ -262,6 +282,9 @@ def signed_findings(root: pathlib.Path) -> list[str]:
             findings.append(f"the tree carries the v{VERSION} patch, which no sign-off "
                             "record covers")
         return findings
+    if latest > (1, 1):
+        import build_polaris_dossier_launch_consent_v1_2 as v12
+        return v12.signed_findings(root)
     if latest == (1, 1):
         if not (root / CANDIDATE).is_dir():
             return [f"{V11_RECORD.as_posix()} exists but the v{VERSION} package is absent"]
@@ -273,8 +296,10 @@ def signed_findings(root: pathlib.Path) -> list[str]:
         if before is None or sha(before[SPEC]) != signed:
             findings.append(f"reversing the v{VERSION} patch does not restore the v1.0 signed bytes")
         reviewed = review_digest(root, V11_RECORD)
-        if reviewed is None or sha((root / SPEC).read_bytes()) != reviewed:
+        if reviewed is None or sha(_spec(root)) != reviewed:
             findings.append(f"the v{VERSION} spec is not the bytes its review read")
+        if peeled(root) is not None:
+            findings.append("the tree carries the v1.2 patch, which no sign-off record covers")
         return findings
     return [f"{RECORD_STEM}-SIGNOFF-v{latest[0]}.{latest[1]}.md is recorded, but that "
             "version has no builder that tells its signed bytes from unsigned ones"]
@@ -414,7 +439,7 @@ def selftest() -> int:
         results.append(("a v1.1 review digest that is not the spec fails",
                         any("not the bytes its review read" in f for f in signed_findings(root))))
         _record_v11(root)
-        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.2.md").write_text("Review: x\n")
+        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.3.md").write_text("Review: x\n")
         results.append(("a later version no builder knows fails",
                         any("has no builder" in f for f in signed_findings(root))
                         and any("has no builder" in f for f in v10.check(root))))

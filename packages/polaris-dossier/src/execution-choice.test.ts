@@ -22,7 +22,7 @@ const REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const RUN_ID = `run-${'a'.repeat(32)}`;
 const ALL = ['owner-started-session', 'owners-own-host', 'owner-attends'];
 const SUBJECT: RunSubject = {
-  repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit: REV, label: '8.10.2', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T10:00:00.000Z' },
   startGates: { registryEntry: 'REGISTRY-ACT-FIXTURE', screeningPolicy: 'POLICY-ACT-FIXTURE' },
@@ -48,6 +48,8 @@ const sources = (over: Partial<GateSources> = {}): GateSources => ({
   repositoryIdsFor: async () => ['redis-redis'],
   consentedRevisionsFor: async () => [{ label: '8.10.2', commitId: REV }],
   observationConsentFor: async () => ({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' }),
+  observationConsentNaming: async () => ({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' }),
+  observationRecords: async () => ({ ok: true, records: [] }),
   registryEntry: async () => OK,
   screeningPolicy: async () => OK,
   d9: async () => OK,

@@ -26,6 +26,9 @@ import type { StoreInventory } from './git-object-reader.js';
  *   `pack/` holding `pack-<hex>.pack` and `.idx` in pairs, each with an optional `.rev`; `objects/info/alternates` and
  *   `http-alternates` are refused by name, as is any `.promisor`, `.keep`, `tmp_*` or unpaired pack;
  * - and the store names no identifier but the commit and the trees and blobs under its tree (StoreInventory).
+ * For a copy-class run's copy of a SHA-256 commit (REQ-polaris-generation-047, `objectFormatSetting`), `config` may also set
+ * `core.repositoryformatversion = 1` and an `[extensions]` section holding `objectformat = sha256` alone, which that form needs and then
+ * requires; an operator-made clone, and every SHA-1 commit, keep the form above.
  * So `commondir`, `modules/`, `worktrees/`, `packed-refs`, `ORIG_HEAD`, `info/grafts`, `BISECT_*`, `rebase-*` and every other name
  * are refused. Every entry is examined by `lstat` and a symbolic link anywhere under `.git` is refused, never followed; every file
  * read is opened with O_NOFOLLOW and checked on the open handle, as the object reader opens its files, and bounded; every listing is
@@ -108,35 +111,52 @@ function listing(gitDir: string, dir: string, budget: { left: number; readonly m
 const namesOnly = (text: string, width: number, allowed: readonly string[]): string | undefined =>
   (text.match(new RegExp(`(?<![0-9A-Fa-f])[0-9A-Fa-f]{${width},}(?![0-9A-Fa-f])`, 'gu')) ?? []).find(id => !allowed.includes(id));
 
-/** `config` holds only what `git init` writes there: a `[core]` section setting keys in `CORE_KEYS`, blank and comment lines. */
-function checkConfig(text: string): void {
+/** `config` holds only what `git init` writes there: a `[core]` section setting keys in `CORE_KEYS`, blank and comment lines. With
+ * `sha256`, the config `git init --object-format=sha256` writes: also an `[extensions]` section setting `objectformat = sha256` alone, and
+ * `core.repositoryformatversion` 1, the "repository format version and object-format setting that format needs" (REQ-polaris-generation-047,
+ * the copy's form); both are then required. */
+function checkConfig(text: string, sha256 = false): void {
   const seen = new Set<string>();
-  let inCore = false;
+  let inCore = false, inExtensions = false, objectFormat = false;
   text.split('\n').forEach((raw, index) => {
     const line = raw.replace(/^[ \t]+|[ \t]+$/gu, '');
     if (line.endsWith('\\')) refused(`config line ${index + 1} continues onto the next line, which the config git init writes never does`);
     if (line === '' || line.startsWith('#') || line.startsWith(';')) return;
     const header = /^\[([^\]]*)\]$/u.exec(line);
     if (header !== null) {
-      if (header[1]!.toLowerCase() !== 'core') refused(`config holds a [${header[1]!.slice(0, 80)}] section, and the config git init writes holds [core] alone`);
-      inCore = true;
+      const name = header[1]!.toLowerCase();
+      if (sha256 && name === 'extensions') { inExtensions = true; inCore = false; return; }
+      if (name !== 'core') refused(`config holds a [${header[1]!.slice(0, 80)}] section, and the config git init writes holds [core] alone${sha256 ? ' and [extensions]' : ''}`);
+      inCore = true; inExtensions = false;
       return;
     }
     const pair = /^([A-Za-z][A-Za-z0-9-]*)[ \t]*=[ \t]*(.*)$/u.exec(line);
+    if (pair !== null && inExtensions) {
+      if (pair[1]!.toLowerCase() !== 'objectformat' || objectFormat || pair[2] !== 'sha256') refused(`config sets extensions.${pair[1]!.slice(0, 80)} other than the one objectformat = sha256 git init writes`);
+      objectFormat = true;
+      return;
+    }
     if (pair === null || !inCore) return refused(`config line ${index + 1} is not a [core] key = value line the config git init writes`);
     const [, key, value] = pair as unknown as [string, string, string];
+    if (sha256 && key.toLowerCase() === 'repositoryformatversion') {
+      if (seen.has('repositoryformatversion')) refused(`config sets core.${key} more than once`);
+      seen.add('repositoryformatversion');
+      if (value !== '1') refused('config sets core.repositoryformatversion to a value other than the 1 a SHA-256 repository needs');
+      return;
+    }
     const values = CORE_KEYS.get(key.toLowerCase());
     if (values === undefined) refused(`config sets core.${key}, which git init never writes`);
     if (seen.has(key.toLowerCase())) refused(`config sets core.${key} more than once`);
     seen.add(key.toLowerCase());
     if (!values!.test(value)) refused(`config sets core.${key} to a value git init never writes there`);
   });
+  if (sha256 && (!objectFormat || !seen.has('repositoryformatversion'))) refused('config lacks the extensions.objectformat = sha256 and core.repositoryformatversion = 1 a SHA-256 repository needs');
 }
 
 /** The `.git` allowlist, which reads no object: every entry is one the consented form leaves, holding only what it leaves there. */
-export function cloneGitDirShape(gitDir: string, commit: string, bounds: { readonly maxEntries?: number } = {}): CloneShape {
+export function cloneGitDirShape(gitDir: string, commit: string, bounds: { readonly maxEntries?: number; readonly objectFormatSetting?: boolean } = {}): CloneShape {
   try {
-    checkGitDir(gitDir, commit, bounds.maxEntries ?? MAX_ENTRIES);
+    checkGitDir(gitDir, commit, bounds.maxEntries ?? MAX_ENTRIES, bounds.objectFormatSetting === true && commit.length === 64);
     return { ok: true };
   } catch (cause) {
     if (cause instanceof Refused) return { ok: false, reason: `${cause.message}; ${SHAPE}; ${REMAKE}` };
@@ -144,7 +164,7 @@ export function cloneGitDirShape(gitDir: string, commit: string, bounds: { reado
   }
 }
 
-function checkGitDir(gitDir: string, commit: string, maxEntries: number): void {
+function checkGitDir(gitDir: string, commit: string, maxEntries: number, sha256: boolean): void {
   const width = commit.length;
   const zero = '0'.repeat(width);
   const budget = { left: maxEntries, max: maxEntries };
@@ -166,7 +186,8 @@ function checkGitDir(gitDir: string, commit: string, maxEntries: number): void {
   }
 
   const config = readRegular(gitDir, at('config'));
-  if (config !== null) checkConfig(config);
+  if (config !== null) checkConfig(config, sha256);
+  else if (sha256) refused('config is absent, and a SHA-256 repository needs its object-format setting');
 
   const head = readRegular(gitDir, at('HEAD'));
   if (head === null) refused('HEAD is absent');
