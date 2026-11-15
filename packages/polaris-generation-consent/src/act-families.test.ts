@@ -213,8 +213,10 @@ const SWEEP: ReadonlyArray<readonly [string, string, string, Verdicts, Verdicts?
   ['text carrying the screening-scope stem', 'NOTES.md', 'See Public Source Scope.\n', ['ok', 'refused', 'ok', 'ok']],
   ['text carrying the policy path and the policy stem', 'NOTES.md', `See ${POLICY} and pwb-secret-classification-policy.\n`, ['ok', 'ok', 'ok', 'ok'], ['ok', 'refused', 'ok', 'ok']],
   ['text carrying the policy path alone', 'NOTES.md', `See ${POLICY}.\n`, ['ok', 'ok', 'ok', 'ok'], ['ok', 'refused', 'ok', 'ok']],
-  // Not a knob, and not aligned: the policy stem names the whole Butlers policy, which the earlier acts and the decisions citing them
-  // carry in prose; as a text needle it refuses this checkout's tree (syzygy-bpyt.1.24 probe), so it names the policy on field lines only.
+  // A knob, left unaligned under the stop clause: the owner ruled the policy stem a knob and that answer A's stop clause halts its
+  // alignment alone (decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-15.md, `pr640-policy-stem`, answer A). As a text needle
+  // it refuses this checkout's tree (syzygy-bpyt.1.24 counterfactual), so it still names the policy only on a field line, or in a file
+  // name beside a withdrawal or revocation word (the name rows above; the stem alone in a name reads ok).
   ['text carrying the policy stem alone', 'NOTES.md', 'See pwb-secret-classification-policy.\n', ['ok', 'ok', 'ok', 'ok']],
   ['text carrying the class module path', 'NOTES.md', `See ${MODULE}.\n`, ['ok', 'ok', 'refused', 'ok']],
   ['text carrying the class stem', 'NOTES.md', 'See rfc5-project-documentation.\n', ['ok', 'ok', 'refused', 'ok']],
