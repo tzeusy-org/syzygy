@@ -71,7 +71,7 @@ Picked: "A. Run it at a terminal after checking the three digests; agents read
 `latest.log`".
 
 - The owner will run, in person, the prepared diagnostic
-  `/home/orca/.tmp/syzygy-pidnamespace-20261114/run.sh` for `syzygy-pmy0`.
+  run.sh, a local scratch file outside this repository in the `syzygy-pidnamespace-20261114` user-run directory, for `syzygy-pmy0`.
 - It reruns one probe of the `af485ea3` candidate guardian in a private PID
   and mount namespace.
 - Before running it, the owner checks these digests:
