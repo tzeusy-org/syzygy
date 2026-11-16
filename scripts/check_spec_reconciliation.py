@@ -470,10 +470,11 @@ def entry_kind(path):
     return prefix + "nonregular entry"
 
 
-def _is_fifo(path):
-    """Whether `path` (symlinks followed) is a FIFO; `stat` never opens it."""
+def _is_regular(path):
+    """Whether `path` (symlinks followed) is a regular file; `stat` never
+    opens it. An entry `stat` cannot examine is not regular."""
     try:
-        return stat.S_ISFIFO(path.stat().st_mode)
+        return stat.S_ISREG(path.stat().st_mode)
     except OSError:
         return False
 
@@ -495,9 +496,13 @@ def signoff_texts(root, collect=None):
 
     `collect` (default: `_COLLECT_REFUSALS`, true only under `main`) names
     every refused entry, then raises one `SignoffEntriesRefused`. Main
-    stopped at the first read error, so once an entry is refused a later
-    FIFO is not opened (main never reached it; opening it could block where
-    main crashed): it is named as not opened. Otherwise the entries are
+    stopped at the first read error, so once an entry is refused no later
+    entry that is not a regular file (by `stat`, symlinks followed) is
+    opened: main never reached it, and opening a FIFO or a device could
+    block or exhaust memory where main crashed (round 4 F7). It is named,
+    with its kind, as not opened. A later regular file is still read, so
+    its own read error is named too. Before the first refusal nothing
+    changes. Otherwise the entries are
     read in the same sorted order as before and the first read error
     propagates unchanged, so an in-process consumer sees the class, message
     and `.filename` it saw then.
@@ -507,7 +512,7 @@ def signoff_texts(root, collect=None):
     out, refused = [], []  # refused: [(path, finding)]
     for path in sorted(base.glob(SIGNOFF_RECORD_GLOB)) if base.is_dir() else ():
         rel = path.relative_to(root).as_posix()
-        if refused and _is_fifo(path):
+        if refused and not _is_regular(path):
             refused.append((path, f"`{rel}`: {entry_kind(path)}, not opened "
                             "because an earlier entry is refused"))
             continue
@@ -2945,52 +2950,94 @@ def _entry_kind_cases(tmp, base, witnesses, failures):
         if got:
             failures.append(f"{name}: must read as before and pass; {got}")
     _fifo_control(tmp, base, witnesses, failures)
-    _fifo_after_refusal_case(tmp, base, witnesses, failures)
+    _after_refusal_cases(tmp, base, witnesses, failures)
 
 
-def _fifo_after_refusal_case(tmp, base, witnesses, failures):
-    """A writerless FIFO sorted after a refused entry: main crashed on the
-    refused entry and never opened the FIFO, so collecting must name both
-    without opening it (it would block). A collection still blocked after
-    30 seconds is unblocked by a writer that closes at once, and fails."""
-    import threading
-    name = "signoff-entry-fifo-after-refusal"
-    tree = Path(tmp) / name
-    shutil.copytree(base, tree)
-    (tree / DECISIONS / "J5DG-DIR-SIGNOFF-v1.0.md").mkdir()
-    fifo = tree / DECISIONS / FIFO_CONTROL_ENTRY
-    os.mkfifo(fifo)
-    outcome = []
+#: Entries sorted after a refused directory (round 4 F7): name ->
+#: (setup(entry path, tree), expected finding after the entry's path). Main
+#: crashed on the directory and never reached them, so collection names each
+#: one that is not a regular file without opening it. A regular file behind
+#: a symlink is still read (`stat` follows the link), so its own refusal is
+#: named instead.
+AFTER_REFUSAL_CASES = {
+    "signoff-entry-fifo-after-refusal": (
+        lambda e, t: os.mkfifo(e),
+        "FIFO, not opened because an earlier entry is refused"),
+    "signoff-entry-symlink-to-fifo-after-refusal": (
+        lambda e, t: (os.mkfifo(t / "J5DG-FIFO-TARGET"),
+                      e.symlink_to(t / "J5DG-FIFO-TARGET")),
+        "symlink to FIFO, not opened because an earlier entry is refused"),
+    "signoff-entry-symlink-to-ptmx-after-refusal": (
+        lambda e, t: e.symlink_to("/dev/ptmx"),
+        "symlink to character device, not opened because an earlier entry "
+        "is refused"),
+    "signoff-entry-symlink-to-dev-zero-after-refusal": (
+        lambda e, t: e.symlink_to("/dev/zero"),
+        "symlink to character device, not opened because an earlier entry "
+        "is refused"),
+    "signoff-entry-symlink-to-regular-after-refusal": (
+        lambda e, t: ((t / "J5DG-BYTES-TARGET").write_bytes(b"\xff\n"),
+                      e.symlink_to(t / "J5DG-BYTES-TARGET")),
+        "regular file that is not UTF-8"),
+}
+AFTER_REFUSAL_ENTRY = "J5DG-LATER-SIGNOFF-v1.0.md"
 
-    def collect():
+#: Collects one tree in a child process, so an entry opened in error can
+#: only block until the timeout or exhaust the child's own address space.
+_COLLECT_CHILD = r"""
+import importlib.util, json, resource, sys
+from pathlib import Path
+resource.setrlimit(resource.RLIMIT_AS, (1 << 30, 1 << 30))
+spec = importlib.util.spec_from_file_location("reconciliation", sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+try:
+    module.signoff_texts(Path(sys.argv[2]), collect=True)
+    print(json.dumps(None))
+except module.SignoffEntriesRefused as exc:
+    print(json.dumps(exc.findings))
+"""
+
+
+def _after_refusal_cases(tmp, base, witnesses, failures):
+    """Each `AFTER_REFUSAL_CASES` entry, sorted after a refused directory,
+    must be named with its expected finding beside the directory's, in a
+    child given 30 seconds and 1 GiB of address space."""
+    for name, (setup, expected) in AFTER_REFUSAL_CASES.items():
+        if "ptmx" in name and not Path("/dev/ptmx").exists():
+            print(f"SKIPPED  {name}: no /dev/ptmx")
+            continue
+        tree = Path(tmp) / name
+        shutil.copytree(base, tree)
+        (tree / DECISIONS / "J5DG-DIR-SIGNOFF-v1.0.md").mkdir()
+        setup(tree / DECISIONS / AFTER_REFUSAL_ENTRY, tree)
+        got = []
         try:
-            signoff_texts(tree, collect=True)
-            outcome.append(None)
-        except SignoffEntriesRefused as exc:
-            outcome.append(exc.findings)
-
-    worker = threading.Thread(target=collect, daemon=True)
-    worker.start()
-    worker.join(30)
-    got = []
-    if worker.is_alive():
-        got.append("collection opened the FIFO and blocked")
-        os.close(os.open(fifo, os.O_WRONLY | os.O_NONBLOCK))
-        worker.join(5)
-    findings = outcome[0] if outcome else None
-    needles = (f"`{DECISIONS}/J5DG-DIR-SIGNOFF-v1.0.md`: directory",
-               f"`{DECISIONS}/{FIFO_CONTROL_ENTRY}`: FIFO, not opened")
-    if findings is None or not all(
-            any(f.startswith(n) for f in findings) for n in needles):
-        got.append(f"collected: {findings!r}")
-    witnesses.append({"mutant": name,
-                      "path": f"{DECISIONS}/{FIFO_CONTROL_ENTRY}",
-                      "old": "<no entry>", "new": "<directory, then FIFO>",
-                      "expected": "REFUSED:FIFO, not opened", "failed": got,
-                      "outcome": "SURVIVED" if got else "killed"})
-    if got:
-        failures.append(f"{name}: expected both entries named and the FIFO "
-                        f"not opened; {got}")
+            child = subprocess.run(
+                [sys.executable, "-c", _COLLECT_CHILD,
+                 str(Path(__file__).resolve()), str(tree)],
+                capture_output=True, text=True, timeout=30)
+            if child.returncode != 0:
+                tail = (child.stderr.strip().splitlines() or [""])[-1]
+                got.append(f"collection exited {child.returncode}: {tail}")
+                findings = None
+            else:
+                findings = json.loads(child.stdout)
+        except subprocess.TimeoutExpired:
+            got.append("collection opened the entry and blocked")
+            findings = None
+        wanted = [f"`{DECISIONS}/J5DG-DIR-SIGNOFF-v1.0.md`: directory",
+                  f"`{DECISIONS}/{AFTER_REFUSAL_ENTRY}`: {expected}"]
+        if not got and findings != wanted:
+            got.append(f"collected: {findings!r}")
+        witnesses.append({"mutant": name,
+                          "path": f"{DECISIONS}/{AFTER_REFUSAL_ENTRY}",
+                          "old": "<no entry>",
+                          "new": "<directory, then entry>",
+                          "expected": f"REFUSED:{expected}", "failed": got,
+                          "outcome": "SURVIVED" if got else "killed"})
+        if got:
+            failures.append(f"{name}: expected {wanted}; {got}")
 
 
 def _fifo_control(tmp, base, witnesses, failures):
