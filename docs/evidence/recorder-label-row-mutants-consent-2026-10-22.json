@@ -1,0 +1,454 @@
+{
+  "subject": {
+    "commit": "de01d48484ba8c00310abc09e2ce077ad77ea268",
+    "branch": "agent/syzygy-bpyt.8.21",
+    "fileSha256": {
+      "packages/polaris-generation-consent/src/recorder-template.ts": "0cf4511c9ef53d3d373c2934303c917b84c2fdc4117ff773f07bfff1917af70d"
+    },
+    "testFileSha256": {
+      "packages/polaris-generation-consent/src/recorder-template.test.ts": "12182dfd8b39bcbb3e9ce69f19474e18862b10fd8726a3f07c7250dfd72cfb5d"
+    }
+  },
+  "runnerPath": "scripts/rule6_mutation_runner.py",
+  "runnerSha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22",
+  "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
+  "project": "@syzygy/polaris-generation-consent",
+  "ranAt": "2026-10-22T05:13:46+00:00",
+  "mutants": [
+    {
+      "id": "M0",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "  const lf = after.indexOf('\\n');",
+      "new": "  const lf = after.indexOf('\\n');",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "survived",
+      "failedTests": 0,
+      "totalTests": 42,
+      "failures": [],
+      "note": "identity control: the fragment replaced by itself, so the run shows the unmutated tests pass under the same command and load"
+    },
+    {
+      "id": "M1",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "    const tail = lineReadOnce(parts, i, slots);",
+      "new": "    const tail = false ? lineReadOnce(parts, i, slots) : null;",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a record whose 120 KB label holds the separator, wherever it fails",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a long line whose closing mark comes before its separators, not at its end",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        }
+      ],
+      "note": "restores the plain read: every pair compiles to two plain groups again (the quadratic read)"
+    },
+    {
+      "id": "M2",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "source += `(?=[^\\\\r\\\\n]*${tail})(?=(?<${part}>",
+      "new": "source += `(?=(?<${part}>",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a record whose 120 KB label holds the separator, wherever it fails",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a long line whose closing mark comes before its separators, not at its end",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        }
+      ],
+      "note": "drops the guard that the line ends as the template does"
+    },
+    {
+      "id": "M2b",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "(?=[^\\\\r\\\\n]*${tail})",
+      "new": "(?=[^\\\\r\\\\n]*\\\\n)",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 12,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "the line slot (syzygy-bpyt.8.17) reads the same slots as the ambiguous pattern from records that fill several slots, repeat one, or fail",
+          "firstErrorLine": "AssertionError: expected [ \u2026(1208) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of characters: 7, starting \"x\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(3) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of characters: 7, starting \"\\\"\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(3) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of characters: 7, starting \"|\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(3) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: up to 5 as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(621) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \"x\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(705) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \" \" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(525) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \"\\\" | \\\"\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(705) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \"\\\" |\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(705) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with the row as the last line",
+          "firstErrorLine": "AssertionError: expected [ \u2026(1521) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a record whose 120 KB label holds the separator, wherever it fails",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a long line whose closing mark comes before its separators, not at its end",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        }
+      ],
+      "note": "the guard asks only for a line break, not for TAIL before it"
+    },
+    {
+      "id": "M3",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "(?=(?<${part}>${SLOT.line})${between}(?<${next}>${SLOT.line})${tail})\\\\k<${part}>${between}\\\\k<${next}>",
+      "new": "(?<${part}>${SLOT.line})${between}(?<${next}>${SLOT.line})",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a record whose 120 KB label holds the separator, wherever it fails",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        }
+      ],
+      "note": "keeps the guard but drops the committed lookahead: plain groups after the guard"
+    },
+    {
+      "id": "M4",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "(?=(?<${part}>${SLOT.line})",
+      "new": "(?=(?<${part}>${SLOT.line}?)",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 13,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "the line slot (syzygy-bpyt.8.17) reads the same slots as the ambiguous pattern from records that fill several slots, repeat one, or fail",
+          "firstErrorLine": "AssertionError: expected [ \u2026(670) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads a label holding the separator, a slot that starts with a blank, and a blank slot as the plain read does",
+          "firstErrorLine": "AssertionError: expected { a: 'a', b: 'b\" | \"c' } to deeply equal { a: 'a\" | \"b', b: 'c' }"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: up to 5 as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(132) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \"x\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(277) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \" \" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(123) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \"\\\" | \\\"\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(277) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \"\\\" |\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(277) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with the row, then a repeated earlier slot",
+          "firstErrorLine": "AssertionError: expected [ \u2026(42) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with the row as the last line",
+          "firstErrorLine": "AssertionError: expected [ \u2026(310) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a slot before the pair",
+          "firstErrorLine": "AssertionError: expected [ \u2026(123) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a slot after the pair",
+          "firstErrorLine": "AssertionError: expected [ \u2026(243) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a record whose 120 KB label holds the separator, wherever it fails",
+          "firstErrorLine": "AssertionError: expected { d: '2026-10-22', a: 'q', \u2026(1) } to deeply equal { d: '2026-10-22', \u2026(2) }"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a long line whose closing mark comes before its separators, not at its end",
+          "firstErrorLine": "AssertionError: expected { a: '. x', \u2026(1) } to deeply equal { \u2026(2) }"
+        }
+      ],
+      "note": "the committed split takes the shortest label (lazy tail) instead of the longest"
+    },
+    {
+      "id": "M5",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "(?<${next}>${SLOT.line})",
+      "new": "(?<${next}>[^\\\\r\\\\n]*)",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 16,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "the line slot (syzygy-bpyt.8.17) reads the same slots as the ambiguous pattern from records that fill several slots, repeat one, or fail",
+          "firstErrorLine": "AssertionError: expected [ \u2026(430) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads a label holding the separator, a slot that starts with a blank, and a blank slot as the plain read does",
+          "firstErrorLine": "AssertionError: expected { a: 'a\" | \"b', b: '  ' } to deeply equal { a: 'a', b: 'b\" | \"  ' }"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of characters: up to 6 as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(3) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of characters: 7, starting \"x\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(5) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of characters: 7, starting \" \" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(3) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of characters: 7, starting \"\\\"\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(5) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of characters: 7, starting \"|\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(5) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: up to 5 as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(438) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \"x\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(341) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \" \" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(336) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \"\\\" | \\\"\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(341) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads every row of tokens: 6, starting \"\\\" |\" as the plain read does",
+          "firstErrorLine": "AssertionError: expected [ \u2026(341) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with the row, then a repeated earlier slot",
+          "firstErrorLine": "AssertionError: expected [ \u2026(56) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with the row as the last line",
+          "firstErrorLine": "AssertionError: expected [ \u2026(384) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a slot before the pair",
+          "firstErrorLine": "AssertionError: expected [ \u2026(376) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a slot after the pair",
+          "firstErrorLine": "AssertionError: expected [ \u2026(278) ] to deeply equal []"
+        }
+      ],
+      "note": "the committed description accepts a blank"
+    },
+    {
+      "id": "M6a",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "uses(x) !== 1 || ",
+      "new": "",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a repeated label",
+          "firstErrorLine": "AssertionError: expected [ \u2026(130) ] to deeply equal []"
+        }
+      ],
+      "note": "a pair whose first slot is repeated elsewhere is read once too"
+    },
+    {
+      "id": "M6b",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "uses(y) !== 1 || ",
+      "new": "",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a repeated description",
+          "firstErrorLine": "AssertionError: expected [ \u2026(131) ] to deeply equal []"
+        }
+      ],
+      "note": "a pair whose second slot is repeated elsewhere is read once too"
+    },
+    {
+      "id": "M7",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "return i + 3 === parts.length - 1 ? `${escape(after)}$` : null;",
+      "new": "return `${escape(after)}${i + 3 === parts.length - 1 ? '$' : ''}`;",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 3,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "the line slot (syzygy-bpyt.8.17) reads the same slots as the ambiguous pattern from records that fill several slots, repeat one, or fail",
+          "firstErrorLine": "AssertionError: expected [ \u2026(160) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a slot before the pair",
+          "firstErrorLine": "AssertionError: expected [ \u2026(173) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a slot after the pair",
+          "firstErrorLine": "AssertionError: expected [ \u2026(61) ] to deeply equal []"
+        }
+      ],
+      "note": "a pair whose second slot is followed by more slots on the same line is read once too"
+    },
+    {
+      "id": "M8",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "slots[x] !== SLOT.line || slots[y] !== SLOT.line || ",
+      "new": "",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 3,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "a recorder template refuses a template slot with no pattern",
+          "firstErrorLine": "AssertionError: expected [Function] to throw an error"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a date before a line slot",
+          "firstErrorLine": "AssertionError: expected [ \u2026(1356) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with a slot that may hold breaks",
+          "firstErrorLine": "AssertionError: expected [ \u2026(306) ] to deeply equal []"
+        }
+      ],
+      "note": "a pair of slots with other patterns is read once too, as line slots"
+    },
+    {
+      "id": "M9",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": " || /[\\r\\n]/.test(between)",
+      "new": "",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with slots split by an LF",
+          "firstErrorLine": "AssertionError: expected [ \u2026(1562) ] to deeply equal []"
+        },
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) reads the same slots as the plain read from 3,000 records of a template with slots split by a CR",
+          "firstErrorLine": "AssertionError: expected [ \u2026(1555) ] to deeply equal []"
+        }
+      ],
+      "note": "a pair whose literal between the slots holds a CR or LF is read once too"
+    },
+    {
+      "id": "M10",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "return `${escape(after.slice(0, lf))}\\\\n`;",
+      "new": "return `${escape(after.slice(0, lf))}`;",
+      "tests": [
+        "packages/polaris-generation-consent/src/recorder-template.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 42,
+      "failures": [
+        {
+          "test": "a line of two line slots, read once (syzygy-bpyt.8.21) refuses within a second a long line whose closing mark comes before its separators, not at its end",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        }
+      ],
+      "note": "TAIL stops before the line break, so the guard and the lookahead accept the closing mark anywhere on the line"
+    }
+  ]
+}
