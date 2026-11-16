@@ -1,0 +1,230 @@
+{
+ "subject": "syzygy-u2a.7 round-2 repair rule-6 controlled mutations (WHATWG URL classifier for N1-N3, declaration-state not-read reasons for N4, RFC2-24 reasons for N5, CAP1-REQ-012 resolution route), answering docs/reviews/R-RT-U2A7-DISCOVERABILITY-EXACT-HEAD-2-RAW.md",
+ "ranAt": "f6efa9d3c760533443f62d155f46234e83409c4d",
+ "subjectDigests": {
+  "packages/cap1-daemon/src/pipeline.ts": "sha256:ae8c337ec6430294e181142c22aa55dd1b90feed7d7c2af6c4ad07588e25bfb1",
+  "packages/cap1-daemon/src/readme-links.test.ts": "sha256:08fce9ecab8fbd1fee8109ee0c49e0a7db2ecc41f338fe159f5e95e692f68898",
+  "packages/cap1-daemon/src/readme-links.ts": "sha256:dc107eb45a1e7d5a36b36da7b2b3a1e21585c26bcc8203e80e38eecf0ba01ffc",
+  "packages/cap1-daemon/src/routes-human.ts": "sha256:635975dbe816f0feff313a430b63e9046a907d4135f05a7c237ea5b1f6ea48bf",
+  "packages/cap1-daemon/src/routes-machine.test.ts": "sha256:76169c7465d7cec11d5e30e63c65a7f0cd37ca6819ecd260cb1b57635fcb4ca0",
+  "packages/cap1-daemon/src/source-snapshot.test.ts": "sha256:a32ab56b323b5bb02d56dd596499e9cd6b6fcdae39a2780e8d283205b9673a20",
+  "packages/cap1-daemon/src/source-snapshot.ts": "sha256:d9d0b793474c47865a3ea8832e22fe95f996ef940107270ce16a352571f3b7ac"
+ },
+ "method": "each mutant replaces exactly one occurrence of old with new in file, runs `npx vitest run --project <tier> <test>` for each listed test, then restores the file; killed means every listed run exited non-zero",
+ "population": 19,
+ "killed": 19,
+ "survived": [],
+ "mutants": [
+  {
+   "id": "C1-edge-space-not-a-hazard",
+   "finding": "N2",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "  if (CONTROL.test(href) || EDGE_SPACE.test(href) || href.includes('\\\\')) return true;",
+   "new": "  if (CONTROL.test(href) || href.includes('\\\\')) return true;",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C2-backslash-not-a-hazard",
+   "finding": "N1",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "  if (CONTROL.test(href) || EDGE_SPACE.test(href) || href.includes('\\\\')) return true;",
+   "new": "  if (CONTROL.test(href) || EDGE_SPACE.test(href)) return true;",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C3-no-trimmed-reading",
+   "finding": "N2",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "    for (const edges of [controls, controls.trim()]) {",
+   "new": "    for (const edges of [controls]) {",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C4-root-relative-off",
+   "finding": "N3",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "  const rooted = rest.startsWith('/');",
+   "new": "  const rooted = false;",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C5-one-sentinel-root",
+   "finding": "N3",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "  if (a.pathname.startsWith(rootA) && b.pathname.startsWith(rootB)) {",
+   "new": "  if (a.pathname.startsWith(rootA)) {",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C6-one-sentinel-host",
+   "finding": "N3",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "  if (first.host !== SENTINEL_HOSTS[0] || second.host !== SENTINEL_HOSTS[1]) {",
+   "new": "  if (first.host !== SENTINEL_HOSTS[0]) {",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C7-same-scheme-prefix-kept",
+   "finding": "N3",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "    leadingScheme !== null && `${(leadingScheme[1] as string).toLowerCase()}:` === scheme",
+   "new": "    false && leadingScheme !== null && `${(leadingScheme[1] as string).toLowerCase()}:` === scheme",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C8-no-parser-edge-strip",
+   "finding": "N2",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "  const href = rawHref.replace(URL_EDGE, '');",
+   "new": "  const href = rawHref;",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C9-unresolvable-is-other",
+   "finding": "N3",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "      return readingNamesEntry(href, scheme) ? AMBIGUOUS : OTHER;",
+   "new": "      return OTHER;",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C10-invalid-utf8-not-a-hazard",
+   "finding": "N3",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "      decodeURIComponent(run);\n    } catch {\n      return true;",
+   "new": "      decodeURIComponent(run);\n    } catch {\n      return false;",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "C11-percent-hazards-off",
+   "finding": "N3",
+   "file": "packages/cap1-daemon/src/readme-links.ts",
+   "old": "  if (/%(?:2f|5c)/i.test(path) || /%(?![0-9A-Fa-f]{2})/.test(path)) return true;",
+   "new": "",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "S1-invalid-folded-into-undeclared",
+   "finding": "N4",
+   "file": "packages/cap1-daemon/src/source-snapshot.ts",
+   "old": "      if (!declaration.result.ok) return 'declaration-invalid';",
+   "new": "      if (!declaration.result.ok) return 'undeclared-governance-root';",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/source-snapshot.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "S2-unreadable-folded-into-missing",
+   "finding": "N4",
+   "file": "packages/cap1-daemon/src/source-snapshot.ts",
+   "old": "      return 'declaration-unreadable';",
+   "new": "      return 'declaration-missing';",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/source-snapshot.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "P1-undeclared-reason-unconsented",
+   "finding": "N5",
+   "file": "packages/cap1-daemon/src/pipeline.ts",
+   "old": "      return { state: 'not-read', reason, label: 'Unknown', unknownReason: MISSING_DECLARATION };",
+   "new": "      return { state: 'not-read', reason, label: 'Unknown', unknownReason: UNCONSENTED } as never;",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/source-snapshot.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "P2-unreadable-reason-missing-declaration",
+   "finding": "N5",
+   "file": "packages/cap1-daemon/src/pipeline.ts",
+   "old": "      return { state: 'not-read', reason, label: 'Unknown', unknownReason: UNCAPTURED };",
+   "new": "      return { state: 'not-read', reason, label: 'Unknown', unknownReason: MISSING_DECLARATION } as never;",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/source-snapshot.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "P3-machine-route-dropped",
+   "finding": "REQ-012",
+   "file": "packages/cap1-daemon/src/pipeline.ts",
+   "old": "        resolutionRoute: UNCONSENTED_RESOLUTION_ROUTE,\n",
+   "new": "",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/source-snapshot.test.ts": 1,
+    "integration:packages/cap1-daemon/src/routes-machine.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "H1-human-route-dropped",
+   "finding": "REQ-012",
+   "file": "packages/cap1-daemon/src/routes-human.ts",
+   "old": "    read.reason === 'unconsented-governance-root'\n      ?",
+   "new": "    false\n      ?",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/source-snapshot.test.ts": 1,
+    "integration:packages/cap1-daemon/src/routes-machine.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "H2-invalid-cause-says-missing",
+   "finding": "N4",
+   "file": "packages/cap1-daemon/src/routes-human.ts",
+   "old": "  'declaration-invalid': 'the project declaration failed validation, so no governance root is admitted',",
+   "new": "  'declaration-invalid': 'the project declaration is missing, so no governance root is declared',",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/source-snapshot.test.ts": 1
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "F1-version-test-reads-root-only",
+   "finding": "F7",
+   "file": "packages/cap1-daemon/src/readme-links.test.ts",
+   "old": "      const nested = lock.packages[`packages/cap1-daemon/node_modules/${name}`];\n      expect((nested ?? lock.packages[`node_modules/${name}`])?.version).toBe(pinned);\n      const installed = exists(`../node_modules/${name}/package.json`)\n        ? `../node_modules/${name}/package.json`\n        : `../../../node_modules/${name}/package.json`;\n      expect(installed === `../node_modules/${name}/package.json`).toBe(nested !== undefined);\n",
+   "new": "      expect(lock.packages[`node_modules/${name}`]?.version).toBe(pinned);\n      const installed = `../../../node_modules/${name}/package.json`;\n",
+   "exitCodes": {
+    "unit:packages/cap1-daemon/src/readme-links.test.ts": 1
+   },
+   "outcome": "killed"
+  }
+ ]
+}
