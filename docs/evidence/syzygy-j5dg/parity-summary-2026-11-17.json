@@ -1,0 +1,108 @@
+{
+  "main": "d065b481e0674cc98c21102c789fef7865653f60",
+  "mainCheckerSha256": "113cd6e9a8dbd3765fa37d12d8c91b6ce11e23e3166d39cfbfe3cbbae70367b8",
+  "head": "c312b6b0fcbc6a253788bd6be24ee247ed9c3809",
+  "headCheckerSha256": "0716061d99e35124f5cf745cce99707617ac19f0c64ed16f6de58286b528469d",
+  "harness": "parity-f6.py",
+  "harnessSha256": "a4496419a072c802bb4833cd62c8b3136aecfa12ebfe0fcab408c4bdeb87ed20",
+  "harnessBase": "parity-retained.py (sha256 53dc3eb160ef56c164da17d4d9a551bcd231ee3ee5b8b87e97a7a6222765c783, unchanged copy of the round-2/3 harness)",
+  "harnessChanges": [
+    "two FIFO cases added (fifo-no-writer, fifo-live-writer with a per-run writer thread)",
+    "a both-timeout identical row is labelled 'IDENTICAL (hangs on both)'",
+    "cleanup removes the case's own FIFO entry, which git clean leaves in place"
+  ],
+  "timeoutSeconds": 60,
+  "recordedDifferential": "/home/orca/.tmp/syzygy-j5dg-recovery-20261104/parity-19x3.jsonl (head cba689c2, main 99040a5c)",
+  "rows19x3": 57,
+  "counts19x3": {
+    "IDENTICAL": 39,
+    "crash->REFUSED": 12,
+    "IDENTICAL (hangs on both)": 3,
+    "both-crash": 3
+  },
+  "treeSame19x3": 57,
+  "changedVsRecorded": [
+    {
+      "case": "symlink-to-fifo",
+      "mode": "--census",
+      "was": "crash->REFUSED",
+      "now": "IDENTICAL (hangs on both)",
+      "headExitWas": 1,
+      "headExitNow": 124
+    },
+    {
+      "case": "symlink-to-fifo",
+      "mode": "--check",
+      "was": "crash->REFUSED",
+      "now": "IDENTICAL (hangs on both)",
+      "headExitWas": 1,
+      "headExitNow": 124
+    },
+    {
+      "case": "symlink-to-fifo",
+      "mode": "--regenerate",
+      "was": "crash->REFUSED",
+      "now": "IDENTICAL (hangs on both)",
+      "headExitWas": 1,
+      "headExitNow": 124
+    }
+  ],
+  "fifoCases2x3": [
+    {
+      "case": "fifo-no-writer",
+      "mode": "--check",
+      "verdict": "IDENTICAL (hangs on both)",
+      "mainExit": 124,
+      "headExit": 124,
+      "treeSame": true
+    },
+    {
+      "case": "fifo-no-writer",
+      "mode": "--census",
+      "verdict": "IDENTICAL (hangs on both)",
+      "mainExit": 124,
+      "headExit": 124,
+      "treeSame": true
+    },
+    {
+      "case": "fifo-no-writer",
+      "mode": "--regenerate",
+      "verdict": "IDENTICAL (hangs on both)",
+      "mainExit": 124,
+      "headExit": 124,
+      "treeSame": true
+    },
+    {
+      "case": "fifo-live-writer",
+      "mode": "--check",
+      "verdict": "IDENTICAL",
+      "mainExit": 0,
+      "headExit": 0,
+      "treeSame": true
+    },
+    {
+      "case": "fifo-live-writer",
+      "mode": "--census",
+      "verdict": "IDENTICAL",
+      "mainExit": 0,
+      "headExit": 0,
+      "treeSame": true
+    },
+    {
+      "case": "fifo-live-writer",
+      "mode": "--regenerate",
+      "verdict": "IDENTICAL",
+      "mainExit": 0,
+      "headExit": 0,
+      "treeSame": true
+    }
+  ],
+  "firstRunNote": "the first run's two FIFO cases failed in the harness (git clean leaves a FIFO; FileExistsError) after all 57 19x3 rows were written; the cleanup was fixed and those two cases re-run alone; stderr of the first run kept as parity-19x3-stderr-first-run.log",
+  "secondCountMethod": "grep -F -c per verdict literal: IDENTICAL 39, crash->REFUSED 12, IDENTICAL (hangs on both) 3, both-crash 3, DIFFERENT 0; tree_same true 57",
+  "harnessSha256For19x3Run": "fca697e266315ccbaa6a54f9012b6ecb0a0d16581ac719b66ba0ae607f94467b",
+  "harnessNote": "parity-19x3 rows were produced by the harness before its FIFO-cleanup line was added (sha256 fca697e2...); that line runs only when the case FIFO exists, which no 19x3 case creates at the entry path, so the 19x3 rows are unaffected. parity-fifo-2x3 rows were produced by the retained parity-f6.py (sha256 a4496419...).",
+  "rows": {
+    "parity-19x3-2026-11-17.jsonl": 57,
+    "parity-fifo-2x3-2026-11-17.jsonl": 6
+  }
+}

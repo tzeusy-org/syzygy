@@ -1,0 +1,89 @@
+{
+  "subject": "scripts/check_spec_reconciliation.py",
+  "subjectSha256": "0716061d99e35124f5cf745cce99707617ac19f0c64ed16f6de58286b528469d",
+  "ranAt": "c312b6b0fcbc6a253788bd6be24ee247ed9c3809",
+  "harnessSha256": "d96ba6c11cf37bd04256764927100f371af387b27943b1c41c635c438106d796",
+  "baseline": {
+    "exit": 0,
+    "tail": [
+      "held signoff-entry-control-live-writer-fifo []",
+      "killed signoff-entry-fifo-after-refusal []",
+      "FAILURES 0"
+    ],
+    "seconds": 5.3
+  },
+  "mutants": [
+    {
+      "id": "F6-M1-refuse-every-fifo",
+      "old": "        if refused and _is_fifo(path):\n",
+      "new": "        if _is_fifo(path):\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "BROKEN signoff-entry-control-live-writer-fifo [\"raised SignoffEntriesRefused: [Errno None] None: '/tmp/tmpq3l6_bzn/signoff-entry-control-live-writer-fifo/.syzygy/governance/decisions/J5DG-FIFO-SIGNOFF-v1.0.md'\"]",
+        "killed signoff-entry-fifo-after-refusal []",
+        "FAILURES 1"
+      ],
+      "seconds": 2.7,
+      "mutatedSha256": "be8a5422148360c658939bdcc0dcd43ed0f549e40b31ead7e663e2a87bde5398"
+    },
+    {
+      "id": "F6-M2-open-fifo-after-refusal",
+      "old": "        if refused and _is_fifo(path):\n",
+      "new": "        if False and refused and _is_fifo(path):\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "held signoff-entry-control-live-writer-fifo []",
+        "SURVIVED signoff-entry-fifo-after-refusal ['collection opened the FIFO and blocked', \"collected: ['`.syzygy/governance/decisions/J5DG-DIR-SIGNOFF-v1.0.md`: directory']\"]",
+        "FAILURES 1"
+      ],
+      "seconds": 35.7,
+      "mutatedSha256": "d8ffbff6b63109b9f6ad76cb78859cd37a8f05f6f5424f89a82b21bf3094b4b3"
+    },
+    {
+      "id": "F6-M3-is-fifo-never",
+      "old": "        return stat.S_ISFIFO(path.stat().st_mode)\n",
+      "new": "        return False\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "held signoff-entry-control-live-writer-fifo []",
+        "SURVIVED signoff-entry-fifo-after-refusal ['collection opened the FIFO and blocked', \"collected: ['`.syzygy/governance/decisions/J5DG-DIR-SIGNOFF-v1.0.md`: directory']\"]",
+        "FAILURES 1"
+      ],
+      "seconds": 35.4,
+      "mutatedSha256": "47a39547eb1e4de801be27d38f10035ec104eece6b4183d4d70874fea624e4c0"
+    },
+    {
+      "id": "F6-M4-skip-unnamed",
+      "old": "            refused.append((path, f\"`{rel}`: {entry_kind(path)}, not opened \"\n                            \"because an earlier entry is refused\"))\n",
+      "new": "            pass\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "held signoff-entry-control-live-writer-fifo []",
+        "SURVIVED signoff-entry-fifo-after-refusal [\"collected: ['`.syzygy/governance/decisions/J5DG-DIR-SIGNOFF-v1.0.md`: directory']\"]",
+        "FAILURES 1"
+      ],
+      "seconds": 5.4,
+      "mutatedSha256": "9ccdf13bb9fb40b5e6f820abc3ef68fa98dee2efa89cc9b843d0d21656738ec9"
+    },
+    {
+      "id": "F6-M5-pre-open-refusal-restored",
+      "old": "        if not collect:\n            # Exactly the read before syzygy-j5dg; its error propagates.\n",
+      "new": "        if _is_fifo(path):\n            finding = f\"`{rel}`: {entry_kind(path)}\"\n            if not collect:\n                raise SignoffEntriesRefused([finding], filename=str(path))\n            refused.append((path, finding))\n            continue\n        if not collect:\n            # Exactly the read before syzygy-j5dg; its error propagates.\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "BROKEN signoff-entry-control-live-writer-fifo [\"raised SignoffEntriesRefused: [Errno None] None: '/tmp/tmp_w4ch_71/signoff-entry-control-live-writer-fifo/.syzygy/governance/decisions/J5DG-FIFO-SIGNOFF-v1.0.md'\"]",
+        "killed signoff-entry-fifo-after-refusal []",
+        "FAILURES 1"
+      ],
+      "seconds": 2.7,
+      "mutatedSha256": "3bfcbdf631e29788db4602ce1b397dae75e5ed2b159151fb83c363261acb4630"
+    }
+  ],
+  "killed": 5,
+  "total": 5
+}
