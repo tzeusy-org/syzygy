@@ -1,0 +1,239 @@
+{
+  "subject": {
+    "commit": "de01d48484ba8c00310abc09e2ce077ad77ea268",
+    "branch": "agent/syzygy-bpyt.8.21",
+    "fileSha256": {
+      "packages/polaris-generation-consent/src/recorder-template.ts": "0cf4511c9ef53d3d373c2934303c917b84c2fdc4117ff773f07bfff1917af70d"
+    },
+    "testFileSha256": {
+      "packages/polaris-dossier/src/gate-label-row.test.ts": "900486f7e9a6887c40a1b4bd146964674f3774e45ae29199338ef5c228b0f0e2"
+    }
+  },
+  "runnerPath": "scripts/rule6_mutation_runner.py",
+  "runnerSha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22",
+  "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
+  "project": "@syzygy/polaris-dossier",
+  "ranAt": "2026-10-22T05:20:58+00:00",
+  "mutants": [
+    {
+      "id": "M0",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "  const lf = after.indexOf('\\n');",
+      "new": "  const lf = after.indexOf('\\n');",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "survived",
+      "failedTests": 0,
+      "totalTests": 1,
+      "failures": [],
+      "note": "identity control: the fragment replaced by itself, so the run shows the unmutated tests pass under the same command and load"
+    },
+    {
+      "id": "M1",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "    const tail = lineReadOnce(parts, i, slots);",
+      "new": "    const tail = false ? lineReadOnce(parts, i, slots) : null;",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 1,
+      "failures": [
+        {
+          "test": "the label row of every template that has one, read once (syzygy-bpyt.8.21) reads back a 120 KB label holding the separator, and refuses within a second wherever the record then fails",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        }
+      ],
+      "note": "restores the plain read: every pair compiles to two plain groups again (the quadratic read)"
+    },
+    {
+      "id": "M2",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "source += `(?=[^\\\\r\\\\n]*${tail})(?=(?<${part}>",
+      "new": "source += `(?=(?<${part}>",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 1,
+      "failures": [
+        {
+          "test": "the label row of every template that has one, read once (syzygy-bpyt.8.21) reads back a 120 KB label holding the separator, and refuses within a second wherever the record then fails",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        }
+      ],
+      "note": "drops the guard that the line ends as the template does"
+    },
+    {
+      "id": "M2b",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "(?=[^\\\\r\\\\n]*${tail})",
+      "new": "(?=[^\\\\r\\\\n]*\\\\n)",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 1,
+      "failures": [
+        {
+          "test": "the label row of every template that has one, read once (syzygy-bpyt.8.21) reads back a 120 KB label holding the separator, and refuses within a second wherever the record then fails",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        }
+      ],
+      "note": "the guard asks only for a line break, not for TAIL before it"
+    },
+    {
+      "id": "M3",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "(?=(?<${part}>${SLOT.line})${between}(?<${next}>${SLOT.line})${tail})\\\\k<${part}>${between}\\\\k<${next}>",
+      "new": "(?<${part}>${SLOT.line})${between}(?<${next}>${SLOT.line})",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 1,
+      "failures": [
+        {
+          "test": "the label row of every template that has one, read once (syzygy-bpyt.8.21) reads back a 120 KB label holding the separator, and refuses within a second wherever the record then fails",
+          "firstErrorLine": "Error: Script execution timed out after 1000ms"
+        }
+      ],
+      "note": "keeps the guard but drops the committed lookahead: plain groups after the guard"
+    },
+    {
+      "id": "M4",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "(?=(?<${part}>${SLOT.line})",
+      "new": "(?=(?<${part}>${SLOT.line}?)",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 1,
+      "failures": [
+        {
+          "test": "the label row of every template that has one, read once (syzygy-bpyt.8.21) reads back a 120 KB label holding the separator, and refuses within a second wherever the record then fails",
+          "firstErrorLine": "AssertionError: redis-no-evidence-drawer: expected { date: '2026-10-07', \u2026(9) } to deeply equal { date: '2026-10-07', \u2026(9) }"
+        }
+      ],
+      "note": "the committed split takes the shortest label (lazy tail) instead of the longest"
+    },
+    {
+      "id": "M5",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "(?<${next}>${SLOT.line})",
+      "new": "(?<${next}>[^\\\\r\\\\n]*)",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "survived",
+      "failedTests": 0,
+      "totalTests": 1,
+      "failures": [],
+      "note": "the committed description accepts a blank"
+    },
+    {
+      "id": "M6a",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "uses(x) !== 1 || ",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "survived",
+      "failedTests": 0,
+      "totalTests": 1,
+      "failures": [],
+      "note": "a pair whose first slot is repeated elsewhere is read once too"
+    },
+    {
+      "id": "M6b",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "uses(y) !== 1 || ",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "survived",
+      "failedTests": 0,
+      "totalTests": 1,
+      "failures": [],
+      "note": "a pair whose second slot is repeated elsewhere is read once too"
+    },
+    {
+      "id": "M7",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "return i + 3 === parts.length - 1 ? `${escape(after)}$` : null;",
+      "new": "return `${escape(after)}${i + 3 === parts.length - 1 ? '$' : ''}`;",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "survived",
+      "failedTests": 0,
+      "totalTests": 1,
+      "failures": [],
+      "note": "a pair whose second slot is followed by more slots on the same line is read once too"
+    },
+    {
+      "id": "M8",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "slots[x] !== SLOT.line || slots[y] !== SLOT.line || ",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "survived",
+      "failedTests": 0,
+      "totalTests": 1,
+      "failures": [],
+      "note": "a pair of slots with other patterns is read once too, as line slots"
+    },
+    {
+      "id": "M9",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": " || /[\\r\\n]/.test(between)",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "survived",
+      "failedTests": 0,
+      "totalTests": 1,
+      "failures": [],
+      "note": "a pair whose literal between the slots holds a CR or LF is read once too"
+    },
+    {
+      "id": "M10",
+      "file": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "old": "return `${escape(after.slice(0, lf))}\\\\n`;",
+      "new": "return `${escape(after.slice(0, lf))}`;",
+      "tests": [
+        "packages/polaris-dossier/src/gate-label-row.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/gate-label-row.test.ts",
+      "outcome": "survived",
+      "failedTests": 0,
+      "totalTests": 1,
+      "failures": [],
+      "note": "TAIL stops before the line break, so the guard and the lookahead accept the closing mark anywhere on the line"
+    }
+  ]
+}

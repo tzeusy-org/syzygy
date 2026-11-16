@@ -8,8 +8,8 @@ import { DECISIONS_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, createPackageAdmiss
 
 /** Every read the dossier relies on, over this checkout's real `.syzygy/governance/decisions/`. A decisions file whose prose trips a
  * withdrawal sweep refuses every admission; this fails CI on the commit that adds it, not at the owner's sitting. The remedy is to
- * reword the file, or to add a reviewed `CITATION_ALLOWLIST` entry for its exact bytes when only exact tooling citations trip it;
- * never to widen a filter. */
+ * reword the file; never to widen a filter. A `CITATION_ALLOWLIST` entry no longer cures a trip: since syzygy-bpyt.1.24 an
+ * allowlisted file is swept whole too, and its set-aside reading can only add a refusal. */
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const realFs: PackageReaderFs = { readdir: dir => readdir(dir), readFile: file => readFile(file, 'utf8') };
 /** The real tree with one extra decisions file, to show the reads do reach that directory. */
