@@ -2,45 +2,57 @@
  "epistemic": "Observed unless a field says Inferred. Timings are single host measurements under shared load, not bounds.",
  "subject": {
   "bead": "syzygy-pmy0",
-  "commit": "80399faeafc7634b88359905b0e7db2eff225cef",
+  "commit": "168172976",
   "files": {
-   "scripts/poc_browser_lifetime.py": "678d0030dfc1eabb5f732a82a9f00240e100ad88e7382b860232a05416a7f5eb",
-   "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py": "b5260d2ce70a887de510ebc5d6ccf48e28f4af63ef8b908ba7d973e42fee9704"
+   "scripts/poc_browser_lifetime.py": "27e36020e866e16c086baf6ff744423a0b9e7186ecda7c87f5941784492bda4e",
+   "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py": "6f0a59ffab17a810b5e410e97e1ae44adbd080174280c02fcb9e61dd90edf308"
   },
-  "predecessorGuardianSha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f"
+  "predecessorGuardianSha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f",
+  "review": "R-PMY0-GUARDIAN-SCAN-READ-1 (CONFIRM WITH EXCEPTIONS) reviewed 7060b9f6; this record is the repair of its findings F1-F6 and retires that review for the changed bytes."
  },
- "mechanism": "Scan rows are read with os.open/os.read, decoded whole with the same codec after the same default-decoder warning, and parsed by lineage() without the owner lookup. Every owned row is re-read by identity() (owner and namespace) before it is returned or signalled. Per-signal family scans, the 3 s deadline, escalation, refusals, two complete empty scans and the acknowledgement are unchanged.",
+ "mechanism": "Stat bodies are read with os.open/os.read and decoded whole with the same codec after the same default-decoder warning, in place of a text stream. Scan rows still go through identity(pid, with_namespace=False), owner lookup included, so a row whose process vanished by that lookup is dropped exactly as before. process_names() lists /proc with os.scandir on every interpreter. Per-signal full family scans, the 3 s deadline, escalation, refusals, two complete empty scans and the acknowledgement are unchanged.",
+ "repair": {
+  "F3": "The 80399fae lineage() reader kept a row whose process exited between its stat read and the former owner lookup; its parent edge could pull earlier-read children (after PID wrap) into the family. Restored: scan rows use identity() again. The intra-scan race differential now finds no difference in outcome, delivered signals or any descendants() result.",
+  "F5": "Python-version-gated listing removed; os.scandir is compared with Path.iterdir on a stable directory (stableListing) and live /proc (listing).",
+  "F1": "The earlier ack17Probe row \"a\" (source 3299de04...) was an intermediate draft, not the subject its note named. It is removed; ack17Probe below ran the subject bytes and records their digest."
+ },
  "equivalence": {
+  "intraScanRace": {
+   "tool": "race_differential.py",
+   "description": "Predecessor and subject drain() with one or two process-table events injected after chosen syscall indices (inside scans, including between a stat read and its owner lookup); PID-wrap trees; compares outcome, delivered signals and every descendants() family set.",
+   "trees": 9,
+   "runs": {
+    "single": 22869,
+    "pair": 215520
+   },
+   "differences": 0,
+   "negativeControls": {
+    "reviewedLineageReader": {
+     "sha256": "678d0030dfc1eabb5f732a82a9f00240e100ad88e7382b860232a05416a7f5eb",
+     "differences": 129270,
+     "note": "syscall indices shift (no owner lookup), so this counts index-shifted runs too; see the aligned control"
+    },
+    "keepVanishedRowMutant": {
+     "sha256": "d0eef5fafb2da0ed81f52cb7f61863e10800314438a18ee93eaffd1539b9d546",
+     "differences": 5375,
+     "note": "subject with the owner lookup's FileNotFoundError swallowed; same syscall sequence, so every difference is the F3 window"
+    }
+   }
+  },
   "simulatedDrain": {
-   "description": "Unmodified old and new drain() over a simulated process table at the syscall boundary; compares outcome, delivered signals, final table and out-of-family signals.",
+   "tool": "differential.py",
    "cases": 3019,
    "identical": 3019,
-   "dynamicCases": 2254,
-   "seed": 20261116,
    "scans": {
     "old": 17221,
     "new": 17221
    },
-   "outOfFamilySignals": {
-    "old": 0,
-    "new": 0
-   },
-   "outcomeDistribution": {
-    "completed": 1419,
-    "RuntimeError / private Chrome descendant identity changed": 831,
-    "PermissionError / [Errno 13] denied: '/proc/2002/ns/pid'": 147,
-    "PermissionError / [Errno 13] denied: '/proc/2006/ns/pid'": 62,
-    "PermissionError / [Errno 13] denied: '/proc/2003/ns/pid'": 132,
-    "PermissionError / [Errno 13] denied: '/proc/2004/ns/pid'": 111,
-    "PermissionError / [Errno 13] denied: '/proc/2001/ns/pid'": 139,
-    "PermissionError / [Errno 13] denied: '/proc/2009/ns/pid'": 18,
-    "PermissionError / [Errno 13] denied: '/proc/2005/ns/pid'": 81,
-    "PermissionError / [Errno 13] denied: '/proc/2008/ns/pid'": 35,
-    "PermissionError / [Errno 13] denied: '/proc/2007/ns/pid'": 44
-   }
+   "seed": 20261116,
+   "note": "process table fixed within a scan; changes only on signals"
   },
   "readerPrimitive": {
    "default": {
+    "tool": "primitive_differential.py",
     "textEncoding": "locale",
     "byteCases": 3744,
     "rowMismatches": 0,
@@ -52,16 +64,31 @@
      "ValueError": 1
     },
     "missingFileEqual": true,
-    "livePids": 3744,
-    "liveEqual": 3744,
-    "liveRaced": 0,
-    "liveReaderDifferences": 0,
+    "live": {
+     "pids": 4347,
+     "equal": 4347,
+     "raced": 0,
+     "readerDifferences": 0
+    },
+    "stableListing": {
+     "entries": 4999,
+     "sameOrder": true,
+     "sameSet": true
+    },
+    "liveListingSymmetricDifferences": [
+     1,
+     4,
+     1,
+     0,
+     0
+    ],
     "scanSecondsBestOf7": {
-     "old": 0.12845095107331872,
-     "new": 0.07385770510882139
+     "old": 0.11125646601431072,
+     "new": 0.07753186789341271
     }
    },
    "clocale": {
+    "tool": "primitive_differential.py",
     "textEncoding": "locale",
     "byteCases": 3744,
     "rowMismatches": 0,
@@ -73,16 +100,32 @@
      "ValueError": 1
     },
     "missingFileEqual": true,
-    "livePids": 3751,
-    "liveEqual": 3751,
-    "liveRaced": 0,
-    "liveReaderDifferences": 0,
+    "live": {
+     "pids": 4341,
+     "equal": 4341,
+     "raced": 0,
+     "readerDifferences": 0,
+     "stateFlips": 2
+    },
+    "stableListing": {
+     "entries": 4999,
+     "sameOrder": true,
+     "sameSet": true
+    },
+    "liveListingSymmetricDifferences": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
     "scanSecondsBestOf7": {
-     "old": 0.12247572001069784,
-     "new": 0.08215589285828173
+     "old": 0.10364289907738566,
+     "new": 0.07683324790559709
     }
    },
    "utf8": {
+    "tool": "primitive_differential.py",
     "textEncoding": "utf-8",
     "byteCases": 3744,
     "rowMismatches": 0,
@@ -94,29 +137,45 @@
      "ValueError": 1
     },
     "missingFileEqual": true,
-    "livePids": 3741,
-    "liveEqual": 3741,
-    "liveRaced": 0,
-    "liveReaderDifferences": 0,
+    "live": {
+     "pids": 4345,
+     "equal": 4345,
+     "raced": 0,
+     "readerDifferences": 0,
+     "stateFlips": 1
+    },
+    "stableListing": {
+     "entries": 4999,
+     "sameOrder": true,
+     "sameSet": true
+    },
+    "liveListingSymmetricDifferences": [
+     3,
+     1,
+     1,
+     0,
+     0
+    ],
     "scanSecondsBestOf7": {
-     "old": 0.11734341201372445,
-     "new": 0.07945882598869503
+     "old": 0.09800609690137208,
+     "new": 0.073262789985165
     }
    }
   },
-  "raceWindowDifference": "[Inferred] A process that exits between its stat read and the former owner lookup is now kept as a scan row instead of dropped; an owned row is still re-read by identity(), which returns None for it. Not reproducible deterministically; no refusal predicate changes."
+  "liveNote": "Live comparisons exclude the volatile state field (counted as stateFlips); the byte corpus checks state parsing exactly. Live listing differences are process churn between two listings; stableListing is the mechanism comparison."
  },
  "mutations": {
-  "commit": "80399faeafc7634b88359905b0e7db2eff225cef",
-  "mutants": 11,
-  "killedByPredictedMarker": 9,
-  "killedByAnyNamedControl": 11,
+  "tool": "mutate.py",
+  "commit": "f1bea130496a536a43ed3800762d08422c32ce25",
+  "mutants": 10,
+  "killedByPredictedMarker": 8,
+  "killedByAnyNamedControl": 10,
   "case": "cdp-browser.browser.test.ts -t 'reaps children after failed endpoint'",
   "records": [
    {
     "id": "control",
     "exitCode": 0,
-    "seconds": 5.849248673999682,
+    "seconds": 7.419939259067178,
     "log": "control.log"
    },
    {
@@ -127,7 +186,7 @@
     "expectedMarker": "truncated stat",
     "exitCode": 1,
     "markerFound": true,
-    "seconds": 2.345318095991388,
+    "seconds": 1.6437215299811214,
     "killed": true,
     "log": "single-read.log"
    },
@@ -139,7 +198,7 @@
     "expectedMarker": "accepted an undecodable stat body",
     "exitCode": 1,
     "markerFound": true,
-    "seconds": 1.5198554508388042,
+    "seconds": 1.6583849480375648,
     "killed": true,
     "log": "decode-replace.log"
    },
@@ -151,7 +210,7 @@
     "expectedMarker": "decoded stat with another codec than the locale",
     "exitCode": 1,
     "markerFound": true,
-    "seconds": 1.9562850929796696,
+    "seconds": 1.8618371130432934,
     "killed": true,
     "log": "decode-fixed-utf8.log"
    },
@@ -163,7 +222,7 @@
     "expectedMarker": "stat opened before decoder warning",
     "exitCode": 1,
     "markerFound": true,
-    "seconds": 1.6380528348963708,
+    "seconds": 2.2342785261571407,
     "killed": true,
     "log": "warning-after-open.log"
    },
@@ -175,60 +234,48 @@
     "expectedMarker": "guardian left a stat descriptor open",
     "exitCode": 1,
     "markerFound": true,
-    "seconds": 1.489267140859738,
+    "seconds": 2.1296934001147747,
     "killed": true,
     "log": "descriptor-left-open.log"
    },
    {
-    "id": "lineage-swallows-errors",
+    "id": "keeps-vanished-row",
     "file": "scripts/poc_browser_lifetime.py",
-    "old": "        return (pid, fields[19], int(fields[1]))\n    except (FileNotFoundError, ProcessLookupError):",
-    "new": "        return (pid, fields[19], int(fields[1]))\n    except Exception:",
-    "expectedMarker": "accepted an undecodable stat body",
+    "old": "        owner = os.stat(directory).st_uid\n",
+    "new": "        try:\n            owner = os.stat(directory).st_uid\n        except FileNotFoundError:\n            owner = None\n",
+    "expectedMarker": "kept a row that vanished after its read",
     "exitCode": 1,
     "markerFound": true,
-    "seconds": 1.5768972290679812,
+    "seconds": 2.548308766912669,
     "killed": true,
-    "log": "lineage-swallows-errors.log"
+    "log": "keeps-vanished-row.log"
    },
    {
-    "id": "lineage-drops-read-exit",
+    "id": "identity-drops-read-exit",
     "file": "scripts/poc_browser_lifetime.py",
-    "old": "        return (pid, fields[19], int(fields[1]))\n    except (FileNotFoundError, ProcessLookupError):",
-    "new": "        return (pid, fields[19], int(fields[1]))\n    except FileNotFoundError:",
-    "expectedMarker": "process exited during read",
+    "old": "                owner, namespace)\n    except (FileNotFoundError, ProcessLookupError):",
+    "new": "                owner, namespace)\n    except FileNotFoundError:",
+    "expectedMarker": "process exited during",
+    "exitCode": 1,
+    "markerFound": true,
+    "seconds": 1.5900016510859132,
+    "killed": true,
+    "log": "identity-drops-read-exit.log"
+   },
+   {
+    "id": "listing-empty",
+    "file": "scripts/poc_browser_lifetime.py",
+    "old": "        return [entry.name for entry in entries]",
+    "new": "        return []",
+    "expectedMarker": "guardian-scan-reused accepted a reused owned PID",
     "exitCode": 1,
     "markerFound": false,
-    "seconds": 1.8577735400758684,
+    "seconds": 1.9817755550611764,
     "killed": false,
-    "log": "lineage-drops-read-exit.log",
-    "actualMarker": "ProcessLookupError: process exited during open",
+    "log": "listing-empty.log",
+    "actualMarker": "guardian-scan silently accepted an unreadable owned identity",
     "killedByOtherNamedControl": true,
     "note": "predicted marker absent; killed by an earlier named control"
-   },
-   {
-    "id": "lineage-start-parent-swapped",
-    "file": "scripts/poc_browser_lifetime.py",
-    "old": "        return (pid, fields[19], int(fields[1]))\n",
-    "new": "        return (pid, fields[1], int(fields[19]))\n",
-    "expectedMarker": "invalid literal for int() with base 10: 'foreign-start'",
-    "exitCode": 1,
-    "markerFound": true,
-    "seconds": 1.3827677879016846,
-    "killed": true,
-    "log": "lineage-start-parent-swapped.log"
-   },
-   {
-    "id": "lineage-reads-owner",
-    "file": "scripts/poc_browser_lifetime.py",
-    "old": "        fields = stat_fields(pid)\n        return (pid,",
-    "new": "        fields = stat_fields(pid)\n        os.stat(f'/proc/{pid}')\n        return (pid,",
-    "expectedMarker": "scan row read an unused owner",
-    "exitCode": 1,
-    "markerFound": true,
-    "seconds": 1.3184968689456582,
-    "killed": true,
-    "log": "lineage-reads-owner.log"
    },
    {
     "id": "scan-skips-reverification",
@@ -238,7 +285,7 @@
     "expectedMarker": "guardian-scan-reused accepted a reused owned PID",
     "exitCode": 1,
     "markerFound": true,
-    "seconds": 2.4183458040934056,
+    "seconds": 3.2488989501725882,
     "killed": true,
     "log": "scan-skips-reverification.log"
    },
@@ -250,7 +297,7 @@
     "expectedMarker": "guardian-scan-reused accepted a reused owned PID",
     "exitCode": 1,
     "markerFound": false,
-    "seconds": 1.7488722850102931,
+    "seconds": 2.1502500700298697,
     "killed": false,
     "log": "scan-uses-wrong-parent.log",
     "actualMarker": "guardian-scan silently accepted an unreadable owned identity",
@@ -263,112 +310,96 @@
   "drain17": [
    {
     "sourceSha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f",
-    "pids": 3735,
-    "load1": 22.0458984375,
+    "pids": 4366,
+    "load1": 9.32763671875,
     "result": "completed",
-    "drainSeconds": 1.9476,
+    "drainSeconds": 2.2544,
     "scans": 20,
-    "scanSeconds": 1.8958,
+    "scanSeconds": 2.2025,
     "remainingBeforeRecovery": []
    },
    {
-    "sourceSha256": "678d0030dfc1eabb5f732a82a9f00240e100ad88e7382b860232a05416a7f5eb",
-    "pids": 3735,
-    "load1": 21.2412109375,
+    "sourceSha256": "27e36020e866e16c086baf6ff744423a0b9e7186ecda7c87f5941784492bda4e",
+    "pids": 4367,
+    "load1": 9.32763671875,
     "result": "completed",
-    "drainSeconds": 1.2857,
+    "drainSeconds": 1.6104,
     "scans": 20,
-    "scanSeconds": 1.2344,
-    "remainingBeforeRecovery": []
-   },
-   {
-    "sourceSha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f",
-    "pids": 3732,
-    "load1": 21.2412109375,
-    "result": "completed",
-    "drainSeconds": 2.0758,
-    "scans": 20,
-    "scanSeconds": 2.0219,
-    "remainingBeforeRecovery": []
-   },
-   {
-    "sourceSha256": "678d0030dfc1eabb5f732a82a9f00240e100ad88e7382b860232a05416a7f5eb",
-    "pids": 3738,
-    "load1": 21.2216796875,
-    "result": "completed",
-    "drainSeconds": 1.4506,
-    "scans": 20,
-    "scanSeconds": 1.3979,
+    "scanSeconds": 1.5588,
     "remainingBeforeRecovery": []
    },
    {
     "sourceSha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f",
-    "pids": 3736,
-    "load1": 21.2216796875,
+    "pids": 4361,
+    "load1": 9.06103515625,
     "result": "completed",
-    "drainSeconds": 2.1194,
+    "drainSeconds": 2.0871,
     "scans": 20,
-    "scanSeconds": 2.0669,
+    "scanSeconds": 2.0354,
     "remainingBeforeRecovery": []
    },
    {
-    "sourceSha256": "678d0030dfc1eabb5f732a82a9f00240e100ad88e7382b860232a05416a7f5eb",
-    "pids": 3755,
-    "load1": 21.2216796875,
+    "sourceSha256": "27e36020e866e16c086baf6ff744423a0b9e7186ecda7c87f5941784492bda4e",
+    "pids": 4360,
+    "load1": 9.06103515625,
     "result": "completed",
-    "drainSeconds": 1.2831,
+    "drainSeconds": 1.641,
     "scans": 20,
-    "scanSeconds": 1.2317,
+    "scanSeconds": 1.5894,
+    "remainingBeforeRecovery": []
+   },
+   {
+    "sourceSha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f",
+    "pids": 4361,
+    "load1": 8.8154296875,
+    "result": "completed",
+    "drainSeconds": 2.1015,
+    "scans": 20,
+    "scanSeconds": 2.0498,
+    "remainingBeforeRecovery": []
+   },
+   {
+    "sourceSha256": "27e36020e866e16c086baf6ff744423a0b9e7186ecda7c87f5941784492bda4e",
+    "pids": 4361,
+    "load1": 8.8154296875,
+    "result": "completed",
+    "drainSeconds": 1.5644,
+    "scans": 20,
+    "scanSeconds": 1.5128,
     "remainingBeforeRecovery": []
    }
   ],
   "ack17Probe": {
-   "before": {
-    "source_sha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f",
-    "guardian_returncode": 137,
-    "guardian_elapsed_after_stop": 3.0623095568735152,
-    "acknowledgement": "closed\n",
-    "proof_succeeded_before_recovery": true,
-    "afterProcFamily": 0,
-    "afterPsFamily": 0,
-    "hostMetadataDenominator": 3762,
-    "recoverySignals": 0
-   },
-   "before2": {
-    "source_sha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f",
-    "guardian_returncode": 137,
-    "guardian_elapsed_after_stop": 2.84149485710077,
-    "acknowledgement": "closed\n",
-    "proof_succeeded_before_recovery": true,
-    "afterProcFamily": 0,
-    "afterPsFamily": 0,
-    "hostMetadataDenominator": 3724,
-    "recoverySignals": 0
-   },
-   "a": {
-    "source_sha256": "3299de04fc0704a3d5e2bd8549e74cc7f8a9bb61f278237f9c9b2ede77285bee",
+   "subject": {
+    "source_sha256": "27e36020e866e16c086baf6ff744423a0b9e7186ecda7c87f5941784492bda4e",
     "guardian_returncode": 143,
-    "guardian_elapsed_after_stop": 1.3713064009789377,
+    "guardian_elapsed_after_stop": 1.767163615906611,
     "acknowledgement": "closed\n",
     "proof_succeeded_before_recovery": true,
     "afterProcFamily": 0,
     "afterPsFamily": 0,
-    "hostMetadataDenominator": 3724,
+    "hostMetadataDenominator": 4347,
     "recoverySignals": 0
    },
-   "b2": {
-    "source_sha256": "398800c566ca99bf65b1fb573538ff4c9296830cf0c2cc884ee2860c05a99b08",
+   "predecessor": {
+    "source_sha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f",
     "guardian_returncode": 137,
-    "guardian_elapsed_after_stop": 0.4641711260192096,
+    "guardian_elapsed_after_stop": 2.319146837107837,
     "acknowledgement": "closed\n",
     "proof_succeeded_before_recovery": true,
     "afterProcFamily": 0,
     "afterPsFamily": 0,
-    "hostMetadataDenominator": 3719,
+    "hostMetadataDenominator": 4368,
     "recoverySignals": 0
    }
   },
-  "ack17ProbeNote": "'before' and 'before2' ran the predecessor guardian, 'a' this subject, 'b2' the rejected batched variant; one execution each."
+  "note": "One ACK17 execution per source, back to back, via probe.sh. Single measurements under shared load, not bounds.",
+  "margin": {
+   "drainRatioSubjectToPredecessor": 0.747,
+   "predecessorFailureAt4774Pids": "4.03 s (retained fnry17 attribution, 18 full scans)",
+   "estimateAt4774Pids": "[Inferred] about 3.0 s against the 3 s deadline: effectively no margin under the conditions of the original failure",
+   "scaling": "Scan cost still grows with visible PIDs times signals: one full /proc scan per signal plus one per drain round."
+  }
  },
  "rejectedAlternatives": {
   "batchedRoundScan": {
@@ -385,51 +416,72 @@
   },
   "taskChildrenWalk": "Not implemented: /proc/<pid>/task/<tid>/children is documented as reliable only for stopped children, and equivalence with the host lineage scan (hidden, unreadable and reparented processes) was not shown."
  },
- "checkAll": {
-  "commit": "80399faeafc7634b88359905b0e7db2eff225cef",
-  "checkAllOnce": {
-   "startedAt": "2026-11-15T17:24:49Z",
-   "exit": 1,
-   "stage": "unit (npm test)",
-   "hostPids": 3730,
-   "load1AtStart": 29.08,
-   "load1AtEnd": 42.74,
-   "typecheck": "passed",
-   "unit": {
-    "files": "2 failed | 181 passed (183)",
-    "tests": "2 failed | 4304 passed | 1 skipped (4307)",
-    "failures": [
-     "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts: Test timed out in 5000ms",
-     "packages/polaris-generation-core/src/island-boundary.test.ts: Test timed out in 5000ms"
-    ]
-   },
-   "notReached": [
-    "test:tiers",
-    "test:integration",
-    "test:e2e",
-    "check:battery"
-   ],
-   "disposition": "Unknown cause; files untouched by this change; not retried and not classified."
+ "earlierSubject80399fae": {
+  "note": "Measurements and the single check:all attempt of the reviewed lineage() form, kept for history; they do not describe this subject.",
+  "mutations": {
+   "commit": "80399faeafc7634b88359905b0e7db2eff225cef",
+   "mutants": 11,
+   "killedByPredictedMarker": 9,
+   "killedByAnyNamedControl": 11
   },
-  "separateStageRuns": {
-   "npmRunCheckBefore": {
-    "unitFiles": "183 passed",
-    "tests": "4306 passed | 1 skipped (4307)"
+  "checkAll": {
+   "commit": "80399faeafc7634b88359905b0e7db2eff225cef",
+   "checkAllOnce": {
+    "startedAt": "2026-11-15T17:24:49Z",
+    "exit": 1,
+    "stage": "unit (npm test)",
+    "hostPids": 3730,
+    "load1AtStart": 29.08,
+    "load1AtEnd": 42.74,
+    "typecheck": "passed",
+    "unit": {
+     "files": "2 failed | 181 passed (183)",
+     "tests": "2 failed | 4304 passed | 1 skipped (4307)",
+     "failures": [
+      "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts: Test timed out in 5000ms",
+      "packages/polaris-generation-core/src/island-boundary.test.ts: Test timed out in 5000ms"
+     ]
+    },
+    "notReached": [
+     "test:tiers",
+     "test:integration",
+     "test:e2e",
+     "check:battery"
+    ],
+    "disposition": "Unknown cause; files untouched by this change; not retried and not classified."
    },
-   "testE2e": {
-    "exit": 0,
-    "lifetimeFile": "5 passed (5)",
-    "otherE2e": "14 files, 135 passed | 2 skipped (137)",
-    "system": "10 passed | 1 skipped files, 52 passed | 1 skipped (53)",
-    "load1": [
-     39.57,
-     27.14
-    ]
+   "separateStageRuns": {
+    "npmRunCheckBefore": {
+     "unitFiles": "183 passed",
+     "tests": "4306 passed | 1 skipped (4307)"
+    },
+    "testE2e": {
+     "exit": 0,
+     "lifetimeFile": "5 passed (5)",
+     "otherE2e": "14 files, 135 passed | 2 skipped (137)",
+     "system": "10 passed | 1 skipped files, 52 passed | 1 skipped (53)",
+     "load1": [
+      39.57,
+      27.14
+     ]
+    },
+    "testTiers": "unit 183, integration 94, e2e 26, live 3; total 306",
+    "testIntegration": "94 files, 2844 passed | 4 skipped (2848); the fixture-tier FAIL lines are the tmpdir checker selftests",
+    "checkBattery": "144 ok, 0 failed"
    },
-   "testTiers": "unit 183, integration 94, e2e 26, live 3; total 306",
-   "testIntegration": "94 files, 2844 passed | 4 skipped (2848); the fixture-tier FAIL lines are the tmpdir checker selftests",
-   "checkBattery": "144 ok, 0 failed"
-  },
-  "governance": "32 OK, 21 WARN, 0 FAIL (53 checks)"
+   "governance": "32 OK, 21 WARN, 0 FAIL (53 checks)"
+  }
+ },
+ "tools": {
+  "build_record.py": "957894792933c3612ea4c86bf227a54ffa2924b8d9e551e9339519ed45d35b39",
+  "differential.py": "42b31b975ee036306901626000460eb0d991fc85d95ec094e617b84faba79a46",
+  "drain17.py": "58c41072cf8fdd1801606bb126d03b8c6daaf8b7dbf9eb9f86ba16322bfd25e4",
+  "launcher_16.py": "fcbce15920d89940048a93142ad2b15371871c741ea04efee8907fa37927a0d4",
+  "main_protocol_17.py": "350a9a06c848268d9efaa39a11af01c978cbab187cb9ea7b277cf29a0cebb24a",
+  "mutate.py": "2d9a113b48c3bf58f7ca0dd3419e71cb282418c308d6612b5190868b143142bb",
+  "prepared-manifest.json": "378aa242f82ec6b22fdf5dfa0e4924ef7a7299058d9af1210f074bb90aa2482b",
+  "primitive_differential.py": "28b66d821bb681b02686161c97f8b9af1fb5966ed4bf00e4d151b6261fffd151",
+  "probe.sh": "13d3be905b28605b8fd51dd05c35ab82312b7d7e1d41901ef3172f5ef9d2ec42",
+  "race_differential.py": "3cff9fb7c5afcaa289eb82d723d72a2338863997f2e1f84fccf59ff65add9fc0"
  }
 }

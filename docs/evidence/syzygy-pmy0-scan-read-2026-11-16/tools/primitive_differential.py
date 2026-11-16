@@ -4,9 +4,10 @@
    by both read_stat_text implementations, then parsed by old identity()'s
    lineage fields and new lineage(); results or (exception class, message)
    must match exactly.
-2. Live host: every /proc PID is read by old identity(pid, with_namespace=
-   False)[:3] and new lineage(pid) back to back; mismatches are re-read once
-   to separate races (start or presence changed) from reader differences.
+2. Live host: every /proc PID is read by old and new identity(pid,
+   with_namespace=False) back to back; mismatches are re-read once to
+   separate races (start or presence changed) from reader differences. The
+   new process_names() listing is compared with Path('/proc').iterdir().
 3. Full scans: old and new descendants() on the live host for this process.
 """
 import hashlib
@@ -97,16 +98,39 @@ def main():
     live = {'pids': len(pids), 'equal': 0, 'raced': 0, 'readerDifferences': []}
     for pid in pids:
         a = old['identity'](pid, with_namespace=False)
-        b = new['lineage'](pid)
-        if (a and a[:3]) == b:
+        b = new['identity'](pid, with_namespace=False)
+        # The state field (index 3) changes between any two reads of a busy
+        # process; the byte corpus above checks its parsing exactly.
+        if a is not None and b is not None and a[3] != b[3]:
+            live['stateFlips'] = live.get('stateFlips', 0) + 1
+        strip = lambda row: row and row[:3] + row[4:]
+        if strip(a) == strip(b):
             live['equal'] += 1
             continue
-        again = new['lineage'](pid), old['identity'](pid, with_namespace=False)
-        if a is None or b is None or again[0] != b:
+        again = new['identity'](pid, with_namespace=False), old['identity'](pid, with_namespace=False)
+        # A race (exit, reuse, a state flip such as R to S) settles on the
+        # re-read: both readers then agree. A reader difference persists.
+        if strip(again[0]) == strip(again[1]):
             live['raced'] += 1
         else:
             live['readerDifferences'].append({'pid': pid, 'old': a, 'new': b})
     report['live'] = live
+    from pathlib import Path
+    # Mechanism equivalence on a directory nothing else changes: scandir
+    # names against Path.iterdir names, as sets and in order.
+    with tempfile.TemporaryDirectory() as directory:
+        for index in range(5000):
+            open(os.path.join(directory, str(rng.randint(1, 4194304))), 'w').close()
+        scanned = [entry.name for entry in os.scandir(directory)]
+        iterated = [path.name for path in Path(directory).iterdir()]
+        report['stableListing'] = {'entries': len(scanned), 'sameOrder': scanned == iterated,
+                                   'sameSet': sorted(scanned) == sorted(iterated)}
+    listings = []
+    for _ in range(5):
+        listings.append((sorted(new['process_names']()), sorted(p.name for p in Path('/proc').iterdir())))
+    report['listing'] = {'attempts': len(listings), 'equalSets': sum(a == b for a, b in listings),
+                         'symmetricDifferenceSizes': [len(set(a) ^ set(b)) for a, b in listings],
+                         'entries': len(listings[-1][0])}
 
     # Whole scans for this process (no family): equal results and timing.
     timings = {}
