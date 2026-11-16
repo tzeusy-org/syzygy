@@ -160,9 +160,11 @@ the launch-consent change.
   "earlier" and "last" are by the sequence numbers Syzygy assigns as it
   freezes a revision, renders pages or records a verdict, read from the
   objects it verifies, never by an instant, so the choice is re-derivable.
-  REQ-033 now says its repair-cycle refusal reaches only a check that counts
-  against that limit, so a design-repair revision is not refused because the
-  repair-cycle limit is spent.
+  REQ-033 keeps v1.6's refusal of "a check or review check beyond the
+  repair-cycle limit" for every check (an inventory check and a review check
+  among them) other than the check of a design-repair revision, which it
+  refuses beyond the design-repair limit and never because the repair-cycle
+  limit is spent.
   **Checks that report findings still count** (owner direction
   `OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-05`, item 3, "Keep the rule;
   the operator chooses the limit when asked"): that direction kept the rule
@@ -200,7 +202,9 @@ the launch-consent change.
   close names that as a condition. That is intended: render a passed
   revision before resubmitting.
 - **Cases the counting rule decides, stated.** An inventory resubmission is
-  never a design repair; it is counted as v1.6 counts it, unchanged. A
+  never a design repair: only a draft revision can be one. Inventory and
+  review checks stay under REQ-033's v1.6 refusal beyond the repair-cycle
+  limit, unchanged. A
   design-repair revision refused at a spent design-repair limit cannot be
   followed by a resubmission that counts against the repair-cycle limit
   instead: the previous revision, and so the class, is unchanged, so the run
@@ -295,8 +299,8 @@ the launch-consent change.
   language hint. It sits in the landing opening after the thesis. No hero is
   no finding; reader advice may say so.
 - **Annotated code walk** (v5 only). A code excerpt plus one or more margin
-  notes. Each note names a line range of the excerpt, which places it and is
-  no citation, and is a claim block under every rule (own label, citations,
+  notes. Each note names a line range in the cited blob's own line numbers,
+  within the excerpt's cited range, which places it and is no citation, and is a claim block under every rule (own label, citations,
   check, fidelity entry). Notes render after the code as an ordered list,
   never inside the preformatted code. Findings: no note; a note range that is
   malformed, reversed or outside the excerpt. A withheld excerpt's notes still
@@ -446,7 +450,8 @@ the launch-consent change.
    fragment, in both views.
 2. RFC7-12 (quoted in "For the owner", item 2): whether a mechanically
    normalised reading-view quotation, with the exact bytes one step away, is
-   "a paraphrase in normative position".
+   "a paraphrase in normative position". REQ-034's warrants now name RFC7-12
+   (owner direction 2026-11-15, answer B; clause block W34).
 3. RFC7-13 ("each altitude is a self-sufficient, honest read"; the owner may
    order altitudes otherwise): the v5 landing page's thesis, hero and pillars
    are claim blocks and an excerpt under every existing rule, so the landing
@@ -527,7 +532,7 @@ it SHALL refuse a check or review check beyond the repair-cycle limit and any st
 Proposed:
 
 ```text
-it SHALL refuse a check or review check that counts against the repair-cycle limit (REQ-polaris-generation-034) beyond that limit, a check of a design-repair revision beyond the design-repair limit, and any step after the deadline,
+it SHALL refuse a check or review check beyond the repair-cycle limit, other than the check of a design-repair revision (REQ-polaris-generation-034), which it SHALL refuse beyond the design-repair limit and never because the repair-cycle limit is spent, and SHALL refuse any step after the deadline,
 ```
 
 ### P1b-3 — `spec.md` — REQ-033: values shown from stored records
@@ -715,7 +720,7 @@ Proposed:
 ```text
 If a withheld excerpt displays its submitted line range, the range SHALL be disclosed within that Unknown presentation as agent-supplied and unverified, never as a Syzygy-verified range or the blob's length.
 
-An annotated code walk is one code excerpt, under every rule for a code excerpt, and one or more margin notes. Each note names an inclusive line range of that excerpt, which places the note and is no citation, and is a claim block under every rule for a claim block: it carries its own label, citations and any quotation, Syzygy checks it and reports its findings as for any claim block, and the fidelity verdict carries an entry for it. Syzygy SHALL report a repair finding for a walk with no note and for a note whose line range is malformed, reversed or outside the excerpt's range. Syzygy SHALL render the excerpt as a code excerpt renders and each note after it, never inside the preformatted code, so that no note's text appears as the project's code. Where the excerpt is withheld, each note still renders under its own citations and the rules for a withheld item, and its line range is marked agent-supplied and unverified.
+An annotated code walk is one code excerpt, under every rule for a code excerpt, and one or more margin notes. Each note names an inclusive line range in the cited blob's own line numbers, lying within the excerpt's cited line range, which places the note and is no citation, and is a claim block under every rule for a claim block: it carries its own label, citations and any quotation, Syzygy checks it and reports its findings as for any claim block, and the fidelity verdict carries an entry for it. Syzygy SHALL report a repair finding for a walk with no note and for a note whose line range is malformed, reversed or outside the excerpt's cited line range. Syzygy SHALL render the excerpt as a code excerpt renders and each note after it, never inside the preformatted code, so that no note's text appears as the project's code. Where the excerpt is withheld, each note still renders under its own citations and the rules for a withheld item, and its line range is marked agent-supplied and unverified.
 ```
 
 ### P5-3 — `spec.md` — REQ-034: how elements render
@@ -746,6 +751,20 @@ Proposed:
 each altitude stays a true coarser account and the verbatim leaf stays reachable.
 
 A draft in schema `polaris-dossier-local-draft-v5` is a schema-v4 draft under every rule this requirement states for one, and SHALL also divide its sections into Poles and carry a thesis and three to five pillars; it MAY name one hero. The thesis is a claim block, under every rule for a claim block, of at most 300 Unicode code points, stating what the project is, for whom and why; whether it is one sentence and says those three things is a review judgement. Each pillar is a claim block under every rule for a claim block, with a short label under the rules for an element's short label, a cost, which is a claim block of its own stating what the pillar's choice costs, and the identity of the one Pole that substantiates it. Syzygy SHALL report a repair finding for a schema-v5 draft without Poles, without a thesis or with one over 300 Unicode code points, with fewer than three or more than five pillars, with a pillar that has no cost, and with a pillar that names no Pole of the draft or names one that has no page of its own; a pillar naming a Pole that has a page is served, and whether that Pole substantiates it is a review judgement. The hero is a code excerpt under every rule for a code excerpt and carries no text of the agent's beyond its language hint. The landing page of a schema-v5 draft SHALL open with, in this order, the title, the thesis and the hero where the draft names one, and above the end of that opening Syzygy SHALL write nothing but the site's navigation and what the thesis and the hero carry under their own rules (their labels, citation marks and caption, and any withheld or Unknown presentation of either); because the thesis is generated prose above the ribbon, it SHALL carry with its label a Syzygy-written mark that it is the agent's draft, so that it stays visually distinct as a draft (RFC7-20) before the one sentence; the ribbon follows it, then the pillars, each with its cost and a link to its Pole's page, then the why section and the map of the Poles as above. A hero whose blob is withheld renders in its place as a withheld code excerpt does. With no hero the opening ends at the thesis, and reader advice MAY say so; a missing hero is no repair finding. The brief for a run whose draft schema is v5 SHALL state these rules. Under the owner's sign-off of this version the thesis, the hero and the pillars open the landing page's altitude, which stays a true coarser account under RFC7-13.
+```
+
+### W34 — `spec.md` — REQ-034 warrants: RFC7-12 (owner direction 2026-11-15, answer B)
+
+Current:
+
+```text
+  contracts: [RFC2-23, RFC2-24, RFC5-17, RFC7-2, RFC7-9, RFC7-10, RFC7-13, RFC7-19, RFC7-20, RFC7-33, RFC7-34]
+```
+
+Proposed:
+
+```text
+  contracts: [RFC2-23, RFC2-24, RFC5-17, RFC7-2, RFC7-9, RFC7-10, RFC7-12, RFC7-13, RFC7-19, RFC7-20, RFC7-33, RFC7-34]
 ```
 
 ### S34 — `spec.md` — REQ-034: added scenarios
@@ -819,9 +838,9 @@ Proposed:
 
 #### Scenario: Annotated code walk
 
-- **WHEN** a schema-v5 draft carries an annotated code walk whose excerpt cites at most 60 lines of an admitted blob and whose notes each name lines within it
+- **WHEN** a schema-v5 draft carries an annotated code walk whose excerpt cites at most 60 lines of an admitted blob and whose notes each name lines within that cited range, in the blob's own line numbers
 - **THEN** the excerpt renders from Syzygy's read as an Observed quotation byte for byte, its comment leaders and line breaks kept in the reading view as in the evidence view, and each note renders after the code as a claim block with its own entry in the fidelity verdict, never inside the preformatted code
-- **AND** a walk with no note, or a note whose line range is malformed, reversed or outside the excerpt's range, is a repair finding, and the notes of a withheld excerpt render under their own citations with their line ranges marked agent-supplied and unverified
+- **AND** a walk with no note, or a note whose line range is malformed, reversed or outside the excerpt's cited line range, is a repair finding, and the notes of a withheld excerpt render under their own citations with their line ranges marked agent-supplied and unverified
 ```
 
 ### C34 — `spec.md` — REQ-034 Case

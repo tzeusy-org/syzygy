@@ -17,14 +17,20 @@ does.
 |---|---|
 | Opening paragraph | Names version 1.7 and its predecessors' records |
 | REQ-polaris-generation-033 | A declared design-repair limit beside the repair-cycle limit; the enforced limits; the design-repair count and the limit a revision counted against are among the values shown as Inferred; three scenarios and one falsifier disjunct name the new limit. Line 27 (the one sentence, appendix and machine form) keeps its bytes |
-| REQ-polaris-generation-034 | Which limit a resubmission counts against; render of every passed revision and reader advice; the quotation display rule; the ribbon and the legend; the annotated code walk; schema v5 (thesis, pillars, hero, landing page); two scenarios amended, ten added; Case, Oracle and Falsifier extended |
+| REQ-polaris-generation-034 | Which limit a resubmission counts against; render of every passed revision and reader advice; the quotation display rule; the ribbon and the legend; the annotated code walk; schema v5 (thesis, pillars, hero, landing page); two scenarios amended, ten added; Case, Observable, Oracle and Falsifier extended; RFC7-12 joins its `warrants` contracts |
 | REQ-polaris-generation-035 | The base round is a fidelity round (carried note 3); what close records, close with a finding, the re-stamp; v5 design criteria; two scenarios amended, two added; Case and Observable extended; Falsifier extended, with carried note 4 |
 | REQ-polaris-generation-036 | None |
 
 [Observed] `PROJECT-STATUS.md`'s effective-composition figure is recounted by
 `apply()` at install (twelve scenarios are added, none removed), and
-`check_spec_reconciliation.py --regenerate` follows. No `warrants` block
-changes, so `GOVERNING-DEPENDENCIES.md` does not change at install.
+`check_spec_reconciliation.py --regenerate` follows. One `warrants` block
+changes: REQ-034's `contracts` gains RFC7-12 (owner direction
+`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-15`, answer B). So
+`--regenerate`, through `build_polaris_dependency_unions.py --write-additions`,
+rewrites this change's `GOVERNING-DEPENDENCIES.md` at install. [Observed]
+`--render polaris-dossier-local-agent-mode` over the patched spec differs from
+the installed file in one line, the `contracts` union, which gains RFC7-12
+(16 clauses become 17).
 
 ## Parent requirements read or displaced
 
