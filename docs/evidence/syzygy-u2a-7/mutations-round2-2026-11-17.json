@@ -1,10 +1,10 @@
 {
  "subject": "syzygy-u2a.7 round-2 repair rule-6 controlled mutations (WHATWG URL classifier for N1-N3, declaration-state not-read reasons for N4, RFC2-24 reasons for N5, CAP1-REQ-012 resolution route), answering docs/reviews/R-RT-U2A7-DISCOVERABILITY-EXACT-HEAD-2-RAW.md",
- "ranAt": "f6efa9d3c760533443f62d155f46234e83409c4d",
+ "ranAt": "d9c214486ced0bed4e9d9212e73a1c69269002ae",
  "subjectDigests": {
   "packages/cap1-daemon/src/pipeline.ts": "sha256:ae8c337ec6430294e181142c22aa55dd1b90feed7d7c2af6c4ad07588e25bfb1",
   "packages/cap1-daemon/src/readme-links.test.ts": "sha256:08fce9ecab8fbd1fee8109ee0c49e0a7db2ecc41f338fe159f5e95e692f68898",
-  "packages/cap1-daemon/src/readme-links.ts": "sha256:dc107eb45a1e7d5a36b36da7b2b3a1e21585c26bcc8203e80e38eecf0ba01ffc",
+  "packages/cap1-daemon/src/readme-links.ts": "sha256:5e5bd7d11480bc7a37f495fa28ae14fd4d5012ffc08b3b17eea6d896ce3cfe16",
   "packages/cap1-daemon/src/routes-human.ts": "sha256:635975dbe816f0feff313a430b63e9046a907d4135f05a7c237ea5b1f6ea48bf",
   "packages/cap1-daemon/src/routes-machine.test.ts": "sha256:76169c7465d7cec11d5e30e63c65a7f0cd37ca6819ecd260cb1b57635fcb4ca0",
   "packages/cap1-daemon/src/source-snapshot.test.ts": "sha256:a32ab56b323b5bb02d56dd596499e9cd6b6fcdae39a2780e8d283205b9673a20",
