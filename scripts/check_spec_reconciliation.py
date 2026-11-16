@@ -150,13 +150,16 @@ with the composition's own findings, kept as a second statement.
 Every mode reads the whole `*-SIGNOFF-v*.md` population of `decisions/`
 first, each entry by `read_text(encoding="utf-8")` as before `syzygy-j5dg`,
 so every entry that read then (a symlink to a regular file or to
-`/dev/null`, a CRLF record) reads the same now. An entry whose read raised
-(a directory, a socket, a dangling or looping symlink, a symlink to a
-directory, an unreadable file, bytes that are not UTF-8) and a FIFO, whose
-read blocked and which is never opened, are never read as absent: the mode
-prints `REFUSED R1` naming each entry and its kind, evaluates no predicate,
-and exits 1. `--selftest` pins one fixture per kind, the controls that
-must read as before, and the CLI's exit 1.
+`/dev/null`, a CRLF record, a FIFO whose writer supplies a finite stream)
+reads the same now. An entry whose read raised (a directory, a socket, a
+dangling or looping symlink, a symlink to a directory, an unreadable file,
+bytes that are not UTF-8) is never read as absent: the mode prints
+`REFUSED R1` naming each entry and its kind, evaluates no predicate, and
+exits 1. A FIFO is opened and read exactly as before, so one with no
+writer still blocks, as it did on main; changing that is the owner's
+question (owner answer `pr714-fifo-refusal` B, 2026-11-15). `--selftest`
+pins one fixture per kind, the controls that must read as before (a
+live-writer FIFO among them), and the CLI's exit 1.
 
 A Polaris addition's recording commit runs one command after the recorder
 has applied the package through its builder:
@@ -428,9 +431,7 @@ class SignoffEntriesRefused(OSError):
     `UnicodeDecodeError` propagates unchanged, as before syzygy-j5dg, since
     a consumer may admit exactly that error by class and `.filename`
     (`prepare_three_surface_poc_governedby_reference_recording.py`'s
-    family selftest does). It sees it for a FIFO only, whose read blocked:
-    an `OSError` whose `.filename` is the entry's path, the shape of every
-    other entry's refusal.
+    family selftest does). A FIFO is read as before, never refused by kind.
     """
 
     def __init__(self, findings, filename=None):
@@ -469,6 +470,14 @@ def entry_kind(path):
     return prefix + "nonregular entry"
 
 
+def _is_fifo(path):
+    """Whether `path` (symlinks followed) is a FIFO; `stat` never opens it."""
+    try:
+        return stat.S_ISFIFO(path.stat().st_mode)
+    except OSError:
+        return False
+
+
 def signoff_texts(root, collect=None):
     """[(path, text)] of every `SIGNOFF_RECORD_GLOB` entry, or refuse.
 
@@ -478,30 +487,29 @@ def signoff_texts(root, collect=None):
     to a regular file or to `/dev/null` is read through, and a CRLF record
     is read with its newlines translated. Whether such links should be
     refused is the owner's question (syzygy-vgzf). Only a read that raised
-    becomes a named refusal; the one entry never opened is a FIFO (by
-    `stat`, symlinks followed), whose read blocked.
+    becomes a named refusal. A FIFO (by `stat`, symlinks followed) is
+    opened and read as before: with a writer that supplies a finite stream
+    it reads, and with none it blocks, as on main (owner answer
+    `pr714-fifo-refusal` B keeps the first; the second is unchanged and is
+    the owner's question).
 
     `collect` (default: `_COLLECT_REFUSALS`, true only under `main`) names
-    every refused entry, then raises one `SignoffEntriesRefused`. Otherwise
-    the entries are read in the same sorted order as before and the first
-    read error propagates unchanged, so an in-process consumer sees the
-    class, message and `.filename` it saw then; a FIFO raises
-    `SignoffEntriesRefused`, an `OSError` carrying its path as `.filename`.
+    every refused entry, then raises one `SignoffEntriesRefused`. Main
+    stopped at the first read error, so once an entry is refused a later
+    FIFO is not opened (main never reached it; opening it could block where
+    main crashed): it is named as not opened. Otherwise the entries are
+    read in the same sorted order as before and the first read error
+    propagates unchanged, so an in-process consumer sees the class, message
+    and `.filename` it saw then.
     """
     collect = _COLLECT_REFUSALS if collect is None else collect
     base = root / DECISIONS
     out, refused = [], []  # refused: [(path, finding)]
     for path in sorted(base.glob(SIGNOFF_RECORD_GLOB)) if base.is_dir() else ():
         rel = path.relative_to(root).as_posix()
-        try:
-            fifo = stat.S_ISFIFO(path.stat().st_mode)
-        except OSError:
-            fifo = False  # the read below raises the same error
-        if fifo:
-            finding = f"`{rel}`: {entry_kind(path)}"
-            if not collect:
-                raise SignoffEntriesRefused([finding], filename=str(path))
-            refused.append((path, finding))
+        if refused and _is_fifo(path):
+            refused.append((path, f"`{rel}`: {entry_kind(path)}, not opened "
+                            "because an earlier entry is refused"))
             continue
         if not collect:
             # Exactly the read before syzygy-j5dg; its error propagates.
@@ -2710,17 +2718,14 @@ def _block_device():
 #: name -> (entry basename, setup(entry path, tree), refusal needle,
 #: library error class). The needle names the entry and its kind, so a
 #: refusal of another entry or kind does not count. The class is what an
-#: in-process caller sees: each but the FIFO is the exact class
-#: `read_text` raised before syzygy-j5dg (a literal, never derived from the
-#: code under test); the FIFO, whose read blocked, raises
-#: `SignoffEntriesRefused`, an `OSError` like the rest.
+#: in-process caller sees: the exact class `read_text` raised before
+#: syzygy-j5dg (a literal, never derived from the code under test). A FIFO
+#: is not a kind: it is read as before (owner answer `pr714-fifo-refusal`
+#: B), so its live-writer form is a control below.
 ENTRY_KIND_CASES = {
     "signoff-entry-directory": (
         "J5DG-DIR-SIGNOFF-v1.0.md", lambda e, t: e.mkdir(), "directory",
         IsADirectoryError),
-    "signoff-entry-fifo": (
-        "J5DG-FIFO-SIGNOFF-v1.0.md", lambda e, t: os.mkfifo(e), "FIFO",
-        SignoffEntriesRefused),
     "signoff-entry-socket": (
         "J5DG-SOCKET-SIGNOFF-v1.0.md",
         lambda e, t: os.mknod(e, stat.S_IFSOCK | 0o644), "socket", OSError),
@@ -2764,6 +2769,53 @@ def _control_target(tree):
 def _crlf(tree):
     path = tree / CRLF_CONTROL_RECORD
     path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+
+
+class _FifoWriter:
+    """A live writer on a FIFO: each reader that opens it reads one finite
+    stream naming no package, then EOF (round 3 F6's producer, by thread).
+
+    Each pass blocks in `open` until a reader opens the FIFO, writes, and
+    closes, so the reader sees EOF. A pass that reopens before that reader
+    closes adds one more copy to its stream, which names no package either;
+    a reader gone before the write is a `BrokenPipeError`, and the next
+    pass waits for the next reader. `stop` wakes a pass blocked in `open`.
+    """
+
+    TEXT = b"A finite stream naming no package.\n"
+
+    def __init__(self, path):
+        import threading
+        self.path, self.stopping = path, threading.Event()
+        self.thread = threading.Thread(target=self._serve, daemon=True)
+        self.thread.start()
+
+    def _serve(self):
+        while not self.stopping.is_set():
+            try:
+                fd = os.open(self.path, os.O_WRONLY)
+            except OSError:
+                return
+            try:
+                if not self.stopping.is_set():
+                    os.write(fd, self.TEXT)
+            except BrokenPipeError:
+                pass
+            finally:
+                os.close(fd)
+
+    def stop(self):
+        self.stopping.set()
+        try:  # a pass blocked in open() needs a reader to return
+            os.close(os.open(self.path, os.O_RDONLY | os.O_NONBLOCK))
+        except OSError:
+            pass
+        self.thread.join(5)
+
+
+#: The live-writer FIFO control's entry (round 3 F6): main read it in every
+#: mode and `--check` passed; it must read and pass the same now.
+FIFO_CONTROL_ENTRY = "J5DG-FIFO-SIGNOFF-v1.0.md"
 
 
 #: Entries every mode read before syzygy-j5dg and must read the same now
@@ -2892,6 +2944,90 @@ def _entry_kind_cases(tmp, base, witnesses, failures):
                           "outcome": "BROKEN" if got else "held"})
         if got:
             failures.append(f"{name}: must read as before and pass; {got}")
+    _fifo_control(tmp, base, witnesses, failures)
+    _fifo_after_refusal_case(tmp, base, witnesses, failures)
+
+
+def _fifo_after_refusal_case(tmp, base, witnesses, failures):
+    """A writerless FIFO sorted after a refused entry: main crashed on the
+    refused entry and never opened the FIFO, so collecting must name both
+    without opening it (it would block). A collection still blocked after
+    30 seconds is unblocked by a writer that closes at once, and fails."""
+    import threading
+    name = "signoff-entry-fifo-after-refusal"
+    tree = Path(tmp) / name
+    shutil.copytree(base, tree)
+    (tree / DECISIONS / "J5DG-DIR-SIGNOFF-v1.0.md").mkdir()
+    fifo = tree / DECISIONS / FIFO_CONTROL_ENTRY
+    os.mkfifo(fifo)
+    outcome = []
+
+    def collect():
+        try:
+            signoff_texts(tree, collect=True)
+            outcome.append(None)
+        except SignoffEntriesRefused as exc:
+            outcome.append(exc.findings)
+
+    worker = threading.Thread(target=collect, daemon=True)
+    worker.start()
+    worker.join(30)
+    got = []
+    if worker.is_alive():
+        got.append("collection opened the FIFO and blocked")
+        os.close(os.open(fifo, os.O_WRONLY | os.O_NONBLOCK))
+        worker.join(5)
+    findings = outcome[0] if outcome else None
+    needles = (f"`{DECISIONS}/J5DG-DIR-SIGNOFF-v1.0.md`: directory",
+               f"`{DECISIONS}/{FIFO_CONTROL_ENTRY}`: FIFO, not opened")
+    if findings is None or not all(
+            any(f.startswith(n) for f in findings) for n in needles):
+        got.append(f"collected: {findings!r}")
+    witnesses.append({"mutant": name,
+                      "path": f"{DECISIONS}/{FIFO_CONTROL_ENTRY}",
+                      "old": "<no entry>", "new": "<directory, then FIFO>",
+                      "expected": "REFUSED:FIFO, not opened", "failed": got,
+                      "outcome": "SURVIVED" if got else "killed"})
+    if got:
+        failures.append(f"{name}: expected both entries named and the FIFO "
+                        f"not opened; {got}")
+
+
+def _fifo_control(tmp, base, witnesses, failures):
+    """A FIFO whose writer supplies a finite stream reads as on main: the
+    library passes and every CLI mode exits 0 without a refusal or a write
+    (round 3 F6; owner answer `pr714-fifo-refusal` B)."""
+    name = "signoff-entry-control-live-writer-fifo"
+    tree = Path(tmp) / name
+    shutil.copytree(base, tree)
+    path = tree / DECISIONS / FIFO_CONTROL_ENTRY
+    os.mkfifo(path)
+    writer = _FifoWriter(path)
+    try:
+        try:
+            report = run(tree)
+            census(tree)
+            texts = dict(signoff_texts(tree, collect=True))
+            got = sorted(report.failed)
+            if not texts.get(path, "").startswith(
+                    _FifoWriter.TEXT.decode()):
+                got.append(f"collected text {texts.get(path)!r}")
+            codes, wrote = _cli_exits(tree)
+            got += [f"{flag}: exit {code}, refusal printed {printed}"
+                    for flag, (code, printed) in codes.items()
+                    if (code, printed) != (0, False)]
+            if wrote:
+                got.append("the CLI wrote a file")
+        except (OSError, ValueError) as exc:
+            got = [f"raised {type(exc).__name__}: {exc}"]
+    finally:
+        writer.stop()
+    witnesses.append({"mutant": name, "path": "<scripted control>",
+                      "old": "<no entry>", "new": "<live-writer FIFO>",
+                      "expected": "PASS", "failed": got,
+                      "outcome": "BROKEN" if got else "held"})
+    if got:
+        failures.append(f"{name}: must read as on main and pass; {got}")
 
 
 def _fragment(before, after):
