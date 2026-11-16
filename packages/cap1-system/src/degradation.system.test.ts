@@ -69,12 +69,16 @@ describe('RT6 — honest degradation over real disk state', () => {
     const entryHtml = await entryResponse.text();
     expect(entryHtml).toContain('data-entry-state="not-read"');
     expect(entryHtml).not.toContain('data-entry-state="unreadable"');
-    expect(entryHtml).toContain('Unknown — reason: unconsented-source-or-provider');
-    // Round-1 F5: the stated cause is the true one — nothing is declared —
-    // never a refused consent.
-    expect(entryHtml).toContain('data-not-read-reason="undeclared-governance-root"');
-    expect(entryHtml).toContain('The entry document was not read: no governance root is declared');
+    // Round-1 F5, round-2 N4/N5: the stated cause is the true one — the
+    // declaration is missing — never a refused consent, and the RFC2-24
+    // reason is #1 missing-declaration, whose route is drafting.
+    expect(entryHtml).toContain('data-not-read-reason="declaration-missing"');
+    expect(entryHtml).toContain(
+      'The entry document was not read: the project declaration is missing, so no governance root is declared (declaration-missing). ' +
+        'Unknown — reason: missing-declaration. Nothing is shown in its place.',
+    );
     expect(entryHtml).not.toContain('consent is not admitted');
+    expect(entryHtml).not.toContain('unconsented-source-or-provider');
   });
 
   it('breaking the declaration between runs changes the served facts to the named invalid arms', async () => {

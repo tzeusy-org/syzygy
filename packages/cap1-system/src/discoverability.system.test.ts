@@ -343,15 +343,19 @@ describe('syzygy-u2a.7 — discoverability rows on both channels of the spawned 
       reason: 'unconsented-governance-root',
       label: 'Unknown',
       unknownReason: 'unconsented-source-or-provider',
+      resolutionRoute: 'record consent',
     });
     const section = served.entryHtml.match(/<section data-section="entry-content"[^>]*>[\s\S]*?<\/section>/)?.[0] ?? '';
     const p = attrsOf(section.match(/<p[^>]*>/)?.[0] ?? '');
     expect(attrsOf(section.match(/<section[^>]*>/)?.[0] ?? '').get('data-entry-state')).toBe('not-read');
-    expect([p.get('data-not-read-reason'), p.get('data-epistemic-label'), p.get('data-unknown-reason')]).toStrictEqual([
-      'unconsented-governance-root',
-      'Unknown',
-      'unconsented-source-or-provider',
-    ]);
+    expect([
+      p.get('data-not-read-reason'),
+      p.get('data-epistemic-label'),
+      p.get('data-unknown-reason'),
+      p.get('data-policy-resolution-route'),
+    ]).toStrictEqual(['unconsented-governance-root', 'Unknown', 'unconsented-source-or-provider', 'record consent']);
+    // CAP1-REQ-012: the human view names the route too.
+    expect(section).toContain('(a standing policy state; resolution route: record consent)');
     expect(served.entryHtml).not.toContain('data-entry-state="unreadable"');
   });
 });

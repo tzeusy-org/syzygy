@@ -6,6 +6,8 @@ import {
   discoverabilityRow,
   explainDiscoverability,
   registerProject,
+  UNCONSENTED_RESOLUTION_ROUTE,
+  UNKNOWN_REASONS,
   type AuthorityExposure,
   type CoverageResult,
   type EvaluatedDiscoverability,
@@ -105,19 +107,67 @@ export interface EvaluatedProjectPlanes {
 }
 
 // The entry as both channels serve it: the captured arm with its digest,
-// or its named state. A consent-refused governance root is its own
-// `not-read` state with its Unknown reason (syzygy-s6cp), never folded into
-// `unreadable`.
+// or its named state. An entry the capture did not read is its own
+// `not-read` state (syzygy-s6cp), never folded into `unreadable`. Its
+// primary Unknown reason is the RFC2-24 reason whose resolution route fits
+// why it was not read (round-2 N5):
+// - no admitted declaration of a governance root (missing, invalid, or a
+//   valid one naming none): #1 `missing-declaration`, route: drafting;
+// - an unreadable declaration: #10 `source-uncaptured-or-unreachable`, the
+//   reason the declaration observation itself carries (absence of evidence,
+//   never evidence of absence);
+// - a declared root whose consent is not admitted: #6
+//   `unconsented-source-or-provider`, a standing policy state served with
+//   its resolution route, record consent (CAP1-REQ-012).
+export type NotReadEntry =
+  | {
+      readonly state: 'not-read';
+      readonly reason: 'declaration-missing' | 'declaration-invalid' | 'undeclared-governance-root';
+      readonly label: 'Unknown';
+      readonly unknownReason: 'missing-declaration';
+    }
+  | {
+      readonly state: 'not-read';
+      readonly reason: 'declaration-unreadable';
+      readonly label: 'Unknown';
+      readonly unknownReason: 'source-uncaptured-or-unreachable';
+    }
+  | {
+      readonly state: 'not-read';
+      readonly reason: 'unconsented-governance-root';
+      readonly label: 'Unknown';
+      readonly unknownReason: 'unconsented-source-or-provider';
+      readonly resolutionRoute: typeof UNCONSENTED_RESOLUTION_ROUTE;
+    };
+
 export type ServedEntry =
   | { readonly state: 'captured'; readonly digest: Sha256Digest; readonly text: string }
   | { readonly state: 'missing'; readonly failureCode: string }
   | { readonly state: 'unreadable'; readonly label: 'Unknown'; readonly failureCode: string }
-  | {
-      readonly state: 'not-read';
-      readonly reason: EntryNotReadReason;
-      readonly label: 'Unknown';
-      readonly unknownReason: 'unconsented-source-or-provider';
-    };
+  | NotReadEntry;
+
+const MISSING_DECLARATION: 'missing-declaration' = UNKNOWN_REASONS[0];
+const UNCONSENTED: 'unconsented-source-or-provider' = UNKNOWN_REASONS[5];
+const UNCAPTURED: 'source-uncaptured-or-unreachable' = UNKNOWN_REASONS[9];
+
+function notReadEntry(reason: EntryNotReadReason): NotReadEntry {
+  switch (reason) {
+    case 'declaration-missing':
+    case 'declaration-invalid':
+    case 'undeclared-governance-root':
+      return { state: 'not-read', reason, label: 'Unknown', unknownReason: MISSING_DECLARATION };
+    case 'declaration-unreadable':
+      return { state: 'not-read', reason, label: 'Unknown', unknownReason: UNCAPTURED };
+    case 'unconsented-governance-root':
+      return {
+        state: 'not-read',
+        reason,
+        label: 'Unknown',
+        unknownReason: UNCONSENTED,
+        resolutionRoute: UNCONSENTED_RESOLUTION_ROUTE,
+      };
+  }
+}
 
 export function servedEntry(entry: CapturedEntry): ServedEntry {
   switch (entry.state) {
@@ -128,12 +178,7 @@ export function servedEntry(entry: CapturedEntry): ServedEntry {
     case 'unreadable':
       return { state: 'unreadable', label: 'Unknown', failureCode: entry.failureCode };
     case 'not-read':
-      return {
-        state: 'not-read',
-        reason: entry.reason,
-        label: 'Unknown',
-        unknownReason: 'unconsented-source-or-provider',
-      };
+      return notReadEntry(entry.reason);
   }
 }
 

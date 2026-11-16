@@ -196,11 +196,36 @@ export interface CapturedRepositoryInput {
 export type CapturedEntry =
   | { readonly state: 'captured'; readonly text: string; readonly digest: Sha256Digest }
   | { readonly state: 'missing' | 'unreadable'; readonly failureCode: string }
-  // Not read because no governance root is declared, or because the
-  // declared one's consent is not admitted: two reasons, never conflated.
+  // Not read because no governance root is admitted. The reason names why,
+  // by the declaration's own state, never conflated (round-2 N4).
   | { readonly state: 'not-read'; readonly reason: EntryNotReadReason };
 
-export type EntryNotReadReason = 'undeclared-governance-root' | 'unconsented-governance-root';
+// - declaration-missing: no declaration file at the root.
+// - declaration-invalid: the file was read and failed validation.
+// - declaration-unreadable: the file could not be read.
+// - undeclared-governance-root: a valid declaration names no governance root.
+// - unconsented-governance-root: the declared root's consent is not admitted.
+export type EntryNotReadReason =
+  | 'declaration-missing'
+  | 'declaration-invalid'
+  | 'declaration-unreadable'
+  | 'undeclared-governance-root'
+  | 'unconsented-governance-root';
+
+function entryNotReadReason(
+  declaration: DeclarationObservation,
+  governanceRoot: CapturedRepositoryInput | undefined,
+): EntryNotReadReason {
+  switch (declaration.kind) {
+    case 'declaration-missing':
+      return 'declaration-missing';
+    case 'declaration-unreachable':
+      return 'declaration-unreadable';
+    case 'declaration-read':
+      if (!declaration.result.ok) return 'declaration-invalid';
+      return governanceRoot === undefined ? 'undeclared-governance-root' : 'unconsented-governance-root';
+  }
+}
 
 export interface CapturedProjectInputs {
   readonly asOf: string;
@@ -582,8 +607,7 @@ export async function captureProjectInputs(
   );
   let entry: CapturedEntry;
   if (governanceRoot === undefined || governanceRoot.decision.authorization !== 'admitted') {
-    const reason: EntryNotReadReason =
-      governanceRoot === undefined ? 'undeclared-governance-root' : 'unconsented-governance-root';
+    const reason = entryNotReadReason(declaration, governanceRoot);
     entry = { state: 'not-read', reason };
     descriptors.push({ kind: 'entry', subjectId: 'entry', ordinal: null, logicalPath: HUMAN_ENTRY_PATH, state: 'not-read', digest: null, failureCode: reason });
   } else {

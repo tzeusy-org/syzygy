@@ -33,6 +33,7 @@ import {
   type DiscoverabilityPlane,
   type ProjectEvaluation,
   type EntryNotReadReason,
+  type NotReadEntry,
   type ProposalPlane,
 } from './pipeline.js';
 
@@ -86,14 +87,10 @@ export type EntrySourceRead =
   | { readonly state: 'present'; readonly text: string; readonly digest: string }
   | { readonly state: 'absent' }
   | { readonly state: 'unreadable'; readonly reason: string }
-  // No governance root is declared, or its consent was not admitted, so the
-  // capture never read the entry (syzygy-s6cp): its own state, never
-  // `unreadable`, and the sentence names which of the two it was.
-  | {
-      readonly state: 'not-read';
-      readonly reason: EntryNotReadReason;
-      readonly unknownReason: 'unconsented-source-or-provider';
-    };
+  // No governance root is admitted, so the capture never read the entry
+  // (syzygy-s6cp): its own state, never `unreadable`, and the sentence
+  // names why, with the RFC2-24 reason that fits (round-2 N4/N5).
+  | NotReadEntry;
 
 export interface HumanRouteDependencies {
   // The ONE evaluation source — the same one the machine endpoint (RT4)
@@ -909,7 +906,7 @@ function entrySourceFrom(evaluation: ProjectEvaluation): EntrySourceRead {
     case 'unreadable':
       return { state: 'unreadable', reason: entry.failureCode };
     case 'not-read':
-      return { state: 'not-read', reason: entry.reason, unknownReason: entry.unknownReason };
+      return entry;
   }
 }
 
@@ -924,17 +921,27 @@ function entryContentFrom(read: Exclude<EntrySourceRead, { state: 'not-read' }>)
   }
 }
 
+// Each cause says only what the capture observed (round-2 N4).
 const NOT_READ_ENTRY_CAUSE: Readonly<Record<EntryNotReadReason, string>> = {
-  'undeclared-governance-root': 'no governance root is declared',
+  'declaration-missing': 'the project declaration is missing, so no governance root is declared',
+  'declaration-invalid': 'the project declaration failed validation, so no governance root is admitted',
+  'declaration-unreadable': 'the project declaration could not be read, so no governance root is admitted',
+  'undeclared-governance-root': 'the project declaration names no governance root',
   'unconsented-governance-root': "the governance root's observation consent is not admitted",
 };
 
-function renderNotReadEntrySection(read: Extract<EntrySourceRead, { state: 'not-read' }>): string {
+function renderNotReadEntrySection(read: NotReadEntry): string {
+  // CAP1-REQ-012: an unconsented portion is a standing policy state, served
+  // with its resolution route.
+  const route =
+    read.reason === 'unconsented-governance-root'
+      ? { attrs: attr('data-policy-resolution-route', read.resolutionRoute), text: ` (a standing policy state; resolution route: ${escapeHtml(read.resolutionRoute)})` }
+      : { attrs: '', text: '' };
   return (
     '<section data-section="entry-content" data-entry-state="not-read">' +
-    `<p data-epistemic-label="Unknown"${attr('data-unknown-reason', read.unknownReason)}${attr('data-not-read-reason', read.reason)}>` +
+    `<p data-epistemic-label="Unknown"${attr('data-unknown-reason', read.unknownReason)}${attr('data-not-read-reason', read.reason)}${route.attrs}>` +
     `The entry document was not read: ${escapeHtml(NOT_READ_ENTRY_CAUSE[read.reason])} (${escapeHtml(read.reason)}). ` +
-    `Unknown — reason: ${escapeHtml(read.unknownReason)}. Nothing is shown in its place.</p></section>`
+    `Unknown — reason: ${escapeHtml(read.unknownReason)}${route.text}. Nothing is shown in its place.</p></section>`
   );
 }
 

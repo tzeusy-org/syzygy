@@ -797,11 +797,15 @@ describe('required evaluated planes on the machine channel', () => {
       reason: 'unconsented-governance-root',
       label: 'Unknown',
       unknownReason: 'unconsented-source-or-provider',
+      resolutionRoute: 'record consent',
     });
     const entryRoute = humanRoutes({ getEvaluation: () => evaluation }).find((route) => route.path === '/entry');
     const html = (await entryRoute?.handle({} as never))?.body ?? '';
     expect(html).toContain('<section data-section="entry-content" data-entry-state="not-read">');
-    expect(html).toContain('data-unknown-reason="unconsented-source-or-provider" data-not-read-reason="unconsented-governance-root"');
+    expect(html).toContain(
+      'data-unknown-reason="unconsented-source-or-provider" data-not-read-reason="unconsented-governance-root" data-policy-resolution-route="record consent"',
+    );
+    expect(html).toContain('Unknown — reason: unconsented-source-or-provider (a standing policy state; resolution route: record consent).');
     expect(html).not.toContain('data-entry-state="unreadable"');
   });
 });
