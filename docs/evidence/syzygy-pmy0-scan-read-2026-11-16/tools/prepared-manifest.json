@@ -1,0 +1,28 @@
+{
+  "status": "FROZEN_INPUT_MANIFEST",
+  "source_path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/browser-main-protocol-17-cda30847/guardian-source.py",
+  "source_sha256": "af485ea34eaaa7d88b5c706b41d4ee406979a1de722412f4cc905e344deb4f3f",
+  "source_commit": "cda308473380aef794abf814fea60d8f506512c9",
+  "probe_sha256": "350a9a06c848268d9efaa39a11af01c978cbab187cb9ea7b277cf29a0cebb24a",
+  "launcher_sha256": "fcbce15920d89940048a93142ad2b15371871c741ea04efee8907fa37927a0d4",
+  "population": "guardian descendants only: one launcher child +16 sleep grandchildren =17; guardian excluded",
+  "source_deadline_seconds": 3,
+  "ack_fd": 3,
+  "ack_required": "closed\n",
+  "controlled_guardian_exit_codes": [
+    0,
+    137,
+    143
+  ],
+  "before": "exact17PID agreement between independent /proc and ps parent-field families, plus pinned start/UID/namespace identities",
+  "after": "raw pre-recovery /proc and ps observer families plus created-identity checks; recovery cannot make proof pass",
+  "recovery": "private operator subreaper, own pinned lineage only, pidfd signals, explicit post-recovery censuses",
+  "not_yet_performed": [
+    "protocol execution",
+    "child launch",
+    "browser/performance run",
+    "runtime verification"
+  ],
+  "command_when_authorized": "python3 main_protocol_17.py > main-protocol-17-result.json",
+  "subject": "One unchanged main-protocol17 ACK probe against bounded-stat-split source"
+}

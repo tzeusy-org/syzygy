@@ -8,8 +8,9 @@ the worker: EOF is the parent-death notification. Operator launches do not
 use this test-only adapter.
 """
 import ctypes
+import io
+import locale
 import os
-from pathlib import Path
 import select
 import signal
 import subprocess
@@ -22,28 +23,51 @@ UID = os.getuid()
 NAMESPACE = os.readlink('/proc/self/ns/pid')
 
 
-def identity(pid, *, with_namespace=True):
-    directory = Path('/proc', str(pid))
+def read_stat_text(path):
+    # Keep the default-decoder warning before opening the file, then decode
+    # the whole file with that codec, as a text-mode read does. Raw reads skip
+    # a text stream's per-file setup, paid once per host process per scan.
+    encoding = io.text_encoding(None)
+    fd = os.open(path, os.O_RDONLY)
     try:
-        text = (directory / 'stat').read_text()
-        fields = text[text.rfind(')') + 2:].split()
-        owner = directory.stat().st_uid
+        chunks = []
+        while chunk := os.read(fd, 4096):
+            chunks.append(chunk)
+    finally:
+        os.close(fd)
+    return b''.join(chunks).decode(locale.getencoding() if encoding == 'locale' else encoding)
+
+
+def identity(pid, *, with_namespace=True):
+    directory = f'/proc/{pid}'
+    try:
+        text = read_stat_text(directory + '/stat')
+        # Only state, parent and start identity (fields 0, 1 and 19) are read.
+        # Keep those tokens exact without allocating every unused stat field.
+        fields = text[text.rfind(')') + 2:].split(None, 20)
+        owner = os.stat(directory).st_uid
         # Namespace links for another UID may be unreadable on a normal
         # host. Retain its parent metadata so a foreign-UID descendant is
         # refused, while unrelated processes require no namespace access.
-        namespace = os.readlink(directory / 'ns/pid') if with_namespace and owner == UID else None
+        namespace = os.readlink(directory + '/ns/pid') if with_namespace and owner == UID else None
         return (pid, fields[19], int(fields[1]), fields[0],
                 owner, namespace)
     except (FileNotFoundError, ProcessLookupError):
         return None
 
 
+def process_names():
+    # Materialize one /proc listing per scan; no Path is built per host PID.
+    with os.scandir('/proc') as entries:
+        return [entry.name for entry in entries]
+
+
 def descendants():
     # Read metadata only. Never inspect another process's argv/environment.
     rows = {}
-    for directory in Path('/proc').iterdir():
-        if directory.name.isdigit():
-            row = identity(int(directory.name), with_namespace=False)
+    for name in process_names():
+        if name.isdigit():
+            row = identity(int(name), with_namespace=False)
             if row is not None:
                 rows[row[0]] = row
     owned = {ROOT: identity(ROOT, with_namespace=False)}

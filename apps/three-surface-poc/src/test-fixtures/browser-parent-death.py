@@ -9,6 +9,7 @@ import subprocess
 import sys
 import time
 import runpy
+from contextlib import contextmanager, nullcontext
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -29,6 +30,28 @@ def identity(pid, *, with_namespace=True):
                 'namespace': os.readlink(p / 'ns/pid') if with_namespace and owner == UID else None}
     except (FileNotFoundError, ProcessLookupError):
         return None
+
+
+@contextmanager
+def guardian_stat(data=None, error=None):
+    # The guardian reads stat bodies with raw os.open/os.read calls. Serve
+    # one synthetic body, or a read-time error, for the unreal PID only, and
+    # require the descriptor to be closed.
+    real_open = os.open
+    chunks = [] if data is None else [data[i:i + 4096] for i in range(0, len(data), 4096)]
+    def opened(path, flags, *args, **kwargs):
+        return 4242 if path == '/proc/999999999/stat' else real_open(path, flags, *args, **kwargs)
+    def read(fd, _size):
+        assert fd == 4242, 'guardian read an unexpected descriptor'
+        if error is not None:
+            raise error
+        return chunks.pop(0) if chunks else b''
+    with patch('os.open', side_effect=opened), patch('os.read', side_effect=read), \
+            patch('os.close') as closed:
+        yield
+    closes = [call.args for call in closed.call_args_list]
+    assert closes, 'guardian left a stat descriptor open'
+    assert closes == [(4242,)] * len(closes), 'guardian closed an unexpected descriptor'
 
 
 def family():
@@ -101,32 +124,67 @@ assert mode in ('SIGTERM', 'SIGKILL', 'startup')
 # real process is signalled by these controls; the real lifetime case below
 # supplies the independent process/census evidence.
 guardian = runpy.run_path(guardian_path)
-with patch.object(Path, 'read_text', side_effect=ProcessLookupError('process exited during read')):
+with patch.object(Path, 'read_text', side_effect=ProcessLookupError('process exited during read')), \
+        patch('os.open', side_effect=ProcessLookupError('process exited during open')):
     assert identity(999999999) is None
     assert guardian['identity'](999999999) is None
+with guardian_stat(error=ProcessLookupError('process exited during read')):
+    assert guardian['identity'](999999999) is None, 'kept a process that exited during read'
 foreign_fields = ['S', '123'] + ['0'] * 17 + ['foreign-start']
 with patch.object(Path, 'read_text', return_value='999999999 (foreign) ' + ' '.join(foreign_fields)), \
-        patch.object(Path, 'stat', return_value=SimpleNamespace(st_uid=UID + 1)), \
+        guardian_stat(('999999999 (foreign) ' + ' '.join(foreign_fields)).encode()), \
+        patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)), \
         patch('os.readlink', side_effect=AssertionError('foreign UID namespace was inspected')):
     assert guardian['identity'](999999999)[4:] == (UID + 1, None)
     assert identity(999999999)['namespace'] is None
+# Fields after the start identity are unused; retained tokens and malformed
+# prefix refusals must be independent of the unconsumed stat/prose tail.
+for suffix in ('', ' extra ignored fields', '\tunused\ntrailing prose', '\u00a0unused'):
+    for whitespace in (' ', '\t', '\u00a0'):
+        text = '999999999 (synthetic ) name) ' + whitespace.join(foreign_fields) + suffix
+        with guardian_stat(text.encode()), \
+                patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)):
+            assert guardian['identity'](999999999) == (999999999, 'foreign-start', 123, 'S', UID + 1, None)
+# A stat body longer than one read is read whole, and a body the text codec
+# cannot decode still refuses rather than being skipped or repaired.
+long_text = '999999999 (' + 'n' * 5000 + ') ' + ' '.join(foreign_fields)
+with guardian_stat(long_text.encode()), patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)):
+    assert guardian['identity'](999999999)[:3] == (999999999, 'foreign-start', 123), 'truncated stat'
+with guardian_stat(b'999999999 (\xff) ' + ' '.join(foreign_fields).encode()), \
+        patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)):
+    try:
+        guardian['identity'](999999999)
+    except UnicodeDecodeError:
+        pass
+    else:
+        raise AssertionError('accepted an undecodable stat body')
+# A scan row whose process is gone by its owner lookup is dropped, so its
+# parent edge cannot pull children read earlier in the same scan into the family.
+with guardian_stat(long_text.encode()), patch('os.stat', side_effect=FileNotFoundError(2, 'gone')):
+    assert guardian['identity'](999999999, with_namespace=False) is None, 'kept a row that vanished after its read'
 stop = guardian['stop']
 ports = stop.__globals__
-row = (999999999, 'original-start', 123, 'S', UID, NAMESPACE)
+row = (999999999, 'original-start', ROOT, 'S', UID, NAMESPACE)
 refusals = []
 for label, current, members in [
     ('start-reused', (row[0], 'reused-start', *row[2:]), {row[0]: row}),
     ('other-uid', (*row[:4], UID + 1, NAMESPACE), {row[0]: row}),
     ('other-namespace', (*row[:5], 'pid:[other]'), {row[0]: row}),
-    ('outside-family', row, {}),
+    ('outside-family', (*row[:2], 123, *row[3:]), {}),
+    ('owned-sibling-unreadable', row, PermissionError('owned sibling namespace denied')),
+    ('owned-sibling-reused', row, RuntimeError('private Chrome descendant identity changed during scan')),
 ]:
-    with patch.dict(ports, {'identity': lambda _pid: current, 'descendants': lambda: members}), \
+    def checked_family():
+        if isinstance(members, Exception):
+            raise members
+        return members
+    with patch.dict(ports, {'identity': lambda _pid: current, 'descendants': checked_family}), \
             patch('os.pidfd_open', return_value=12345), patch('os.close'), \
             patch('signal.pidfd_send_signal', side_effect=AssertionError('unsafe identity was signalled')), \
             patch('os.kill', side_effect=AssertionError('PID-addressed signal bypassed stable handle')):
         try:
             stop(row, signal.SIGKILL)
-        except RuntimeError:
+        except (RuntimeError, PermissionError):
             refusals.append(label)
         else:
             raise AssertionError(f'{label} did not refuse signalling')
@@ -145,6 +203,40 @@ with patch('os.pidfd_open', side_effect=ProcessLookupError('already reaped')), \
         patch('signal.pidfd_send_signal') as sent:
     stop(row, signal.SIGKILL)
     sent.assert_not_called()
+# Default-decoder warnings precede attempted file access, including a failed
+# read. The optimized reader must preserve this supported interpreter mode.
+warning_control = subprocess.run([sys.executable, '-X', 'warn_default_encoding',
+    '-W', 'error::EncodingWarning', '-c', '''
+import runpy, sys
+from unittest.mock import patch
+guardian = runpy.run_path(sys.argv[1])
+with patch('os.open', side_effect=AssertionError('stat opened before decoder warning')):
+    try:
+        guardian['identity'](999999999)
+    except EncodingWarning:
+        pass
+    else:
+        raise AssertionError('missing decoder warning before stat access')
+''', guardian_path], capture_output=True, text=True)
+assert warning_control.returncode == 0, warning_control.stderr
+# The stat body is decoded with the interpreter's locale codec, as a text-mode
+# read does: under a non-UTF-8 locale, non-ASCII bytes still refuse.
+codec_control = subprocess.run([sys.executable, '-X', 'utf8=0', '-c', '''
+import runpy, sys
+from unittest.mock import patch
+guardian = runpy.run_path(sys.argv[1])
+fields = ' '.join(['S', '123'] + ['0'] * 17 + ['start'])
+with patch('os.open', return_value=4242), patch('os.close'), \\
+        patch('os.read', side_effect=[('999999999 (\\u00e9) ' + fields).encode(), b'']):
+    try:
+        guardian['identity'](999999999)
+    except UnicodeDecodeError as error:
+        assert error.encoding == 'ascii', error.encoding
+    else:
+        raise AssertionError('decoded stat with another codec than the locale')
+''', guardian_path], capture_output=True, text=True,
+    env={**os.environ, 'LC_ALL': 'C', 'PYTHONCOERCECLOCALE': '0', 'PYTHONUTF8': '0'})
+assert codec_control.returncode == 0, codec_control.stderr
 # The deadline refuses rather than acknowledging an unverified family.
 ticks = iter([0, 0])
 clock = SimpleNamespace(monotonic=lambda: next(ticks, 4), sleep=lambda _seconds: None)
@@ -221,6 +313,7 @@ for label, scanner, reader, root_row, child_row in [
         return ((child_row[0], 'reused', *child_row[2:]) if isinstance(child_row, tuple)
                 else child_row | {'start': 'reused'})
     with patch.dict(scanner.__globals__, {reader: scanned}), \
+            patch('os.scandir', return_value=nullcontext([SimpleNamespace(name='999999999')])), \
             patch.object(Path, 'iterdir', return_value=iter([Path('/proc/999999999')])):
         try:
             scanner()
@@ -231,6 +324,7 @@ for label, scanner, reader, root_row, child_row in [
     def disappeared(pid, *, with_namespace=True):
         return root_row if pid == ROOT else (None if with_namespace else child_row)
     with patch.dict(scanner.__globals__, {reader: disappeared}), \
+            patch('os.scandir', return_value=nullcontext([SimpleNamespace(name='999999999')])), \
             patch.object(Path, 'iterdir', return_value=iter([Path('/proc/999999999')])):
         assert not scanner(), 'a disappeared candidate remained in the family'
 decoy = subprocess.Popen(['sleep', '3600'], start_new_session=True)
@@ -257,7 +351,14 @@ try:
         assert helpers[0]['pid'] in {r['pid'] for r in report['before']['proc']}, 'proc census missed the stopped owned helper'
         assert helpers[0]['pid'] in {int(r.split()[0]) for r in report['before']['psFamily']}, 'ps census missed the stopped owned helper'
     report['milestone'] = {'helpers': helpers, 'family': rows}
-    permitted_reaps = {worker.pid, *(r['pid'] for r in rows if r['ppid'] == worker.pid)}
+    report['guardians'] = [r for r in rows if r['ppid'] == worker.pid]
+    for row in report['guardians']:
+        current = identity(row['pid'])
+        assert current and current['start'] == row['start'], 'guardian identity changed before role check'
+        argv = Path('/proc', str(row['pid']), 'cmdline').read_bytes().split(b'\0')
+        assert len(argv) > 1 and os.fsdecode(argv[1]) == guardian_path, 'worker child is not the expected guardian'
+    guardian_pids = {r['pid'] for r in report['guardians']}
+    permitted_reaps = {worker.pid, *guardian_pids}
     if mode == 'startup':
         assert worker.wait(timeout=30) == 0, 'startup failure control failed'
     else:
@@ -265,10 +366,17 @@ try:
     deadline = time.monotonic() + 5
     while time.monotonic() < deadline:
         report['reaped'] += reap(worker)
-        if not family():
+        # Wait on the pinned guardian, without competing with its full-host
+        # scans. The independent final censuses below still check its work.
+        if guardian_pids.issubset({r['pid'] for r in report['reaped']}):
             break
         time.sleep(.025)
     report['after'] = census()
+    # The worker's stderr/ack pipes die with it. The independent subreaper
+    # still observes the guardian's exit, before any recovery can mask it.
+    report['guardianExits'] = [{'pid': r['pid'], 'exited': os.WIFEXITED(r['status']),
+                               'code': os.waitstatus_to_exitcode(r['status'])}
+                              for r in report['reaped'] if r['pid'] in guardian_pids]
     # A guardian must reap its own escaped Chrome children. An init-style
     # observer may reap the killed worker and the now-orphaned guardian,
     # but must not hide a missing subreaper by reaping Chrome's helpers.

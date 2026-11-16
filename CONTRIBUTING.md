@@ -137,6 +137,10 @@ root.
 - **e2e** drives a browser, builds or installs in a clone, traces with strace
   or runs the compiled daemon (the `*.system.test.ts` files under
   `packages/cap1-system`, which keep their own config).
+  `npm run test:e2e` first runs `cdp-browser.browser.test.ts` alone: its
+  process-lifetime cases exercise the private guardian's fixed cleanup budget.
+  The remaining e2e files then run together, followed by the system tier.
+  `test:tiers` checks that these phases discover every e2e file exactly once.
 - **Live** never runs in a workflow.
 - **Where a test goes.** A new test file is a unit test until
   `vitest.tiers.ts` lists it under `INTEGRATION_TESTS`, `E2E_TESTS` or
