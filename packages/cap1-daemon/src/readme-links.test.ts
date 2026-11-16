@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
@@ -36,7 +36,11 @@ describe('README_LINK_READER_VERSION', () => {
   // Round-1 F7: the manifest names the parser that ran. A bump of either
   // pin that keeps the old string fails here: the exact pin, the lock and
   // the installed package must all name the version the string names.
+  // Node resolves this package's own node_modules first, then the root's,
+  // and so does the lock (another workspace may hoist a different version
+  // to the root, as parse5@8.1.0 is today).
   it('names the versions the package pins, the lock fixes and node_modules holds', () => {
+    const exists = (relative: string): boolean => existsSync(fileURLToPath(new URL(relative, import.meta.url)));
     const read = (relative: string): unknown =>
       JSON.parse(readFileSync(fileURLToPath(new URL(relative, import.meta.url)), 'utf8'));
     const manifest = read('../package.json') as { dependencies: Record<string, string> };
@@ -44,8 +48,13 @@ describe('README_LINK_READER_VERSION', () => {
     const versions = (['marked', 'parse5'] as const).map((name) => {
       const pinned = manifest.dependencies[name];
       expect(pinned).toMatch(/^\d+\.\d+\.\d+$/);
-      expect(lock.packages[`node_modules/${name}`]?.version).toBe(pinned);
-      expect((read(`../../../node_modules/${name}/package.json`) as { version: string }).version).toBe(pinned);
+      const nested = lock.packages[`packages/cap1-daemon/node_modules/${name}`];
+      expect((nested ?? lock.packages[`node_modules/${name}`])?.version).toBe(pinned);
+      const installed = exists(`../node_modules/${name}/package.json`)
+        ? `../node_modules/${name}/package.json`
+        : `../../../node_modules/${name}/package.json`;
+      expect(installed === `../node_modules/${name}/package.json`).toBe(nested !== undefined);
+      expect((read(installed) as { version: string }).version).toBe(pinned);
       return `${name}@${pinned}`;
     });
     expect(README_LINK_READER_VERSION).toBe(`${versions.join('+')};gfm=true`);
@@ -245,6 +254,98 @@ describe('extractReadmeEntryLink — unclassifiable, never no', () => {
         LOCATOR,
       ),
     ).toStrictEqual(ambiguous(href));
+  });
+});
+
+// Round-2 N1–N3 (owner answer pr585-round3, 2026-11-15): every href is
+// resolved by the WHATWG URL parser. Each expected value below is what a
+// browser would open, or ambiguous-target where renderers disagree.
+describe('extractReadmeEntryLink — the WHATWG reading (round-2 N1–N3)', () => {
+  // N1: the parser reads a backslash as `/` for http(s), so each of these is
+  // a network-path href onto the entry. Unclassifiable, never no.
+  const networkPaths: readonly (readonly [string, string, ReadmeLinkContext])[] = [
+    ['two backslashes, no locator', '\\\\github.com/o/r/blob/main/.syzygy/intent/OVERVIEW.md', NO_LINK_CONTEXT],
+    ['two backslashes, through the locator', '\\\\forge.example/owner/repo/blob/main/.syzygy/intent/OVERVIEW.md', LOCATOR],
+    ['slash then backslash, through the locator', '/\\forge.example/owner/repo/blob/main/.syzygy/intent/OVERVIEW.md', LOCATOR],
+    ['backslash then slash, through the locator', '\\/forge.example/owner/repo/blob/main/.syzygy/intent/OVERVIEW.md', LOCATOR],
+    ['backslash after the host, through the locator', 'https://forge.example\\owner/repo/blob/main/.syzygy/intent/OVERVIEW.md', LOCATOR],
+  ];
+  for (const [form, href, context] of networkPaths) {
+    it(`N1/N3 ${form} → ambiguous-target`, () => {
+      expect(extractReadmeEntryLink(`<a href="${href}">e</a>`, context)).toStrictEqual(ambiguous(href));
+    });
+  }
+
+  // N2: the parser strips only C0 controls and U+0020 at either end and
+  // encodes any other white space, so the browser opens another file; a
+  // trimming renderer opens the entry. Unclassifiable, never yes.
+  const edgeSpace: readonly (readonly [string, string, string])[] = [
+    ['leading NBSP', '[x](&nbsp;.syzygy/intent/OVERVIEW.md)', '\u00a0.syzygy/intent/OVERVIEW.md'],
+    ['leading BOM', '<a href="&#xFEFF;.syzygy/intent/OVERVIEW.md">x</a>', '\ufeff.syzygy/intent/OVERVIEW.md'],
+    ['trailing em space', '[x](.syzygy/intent/OVERVIEW.md&#x2003;)', '.syzygy/intent/OVERVIEW.md\u2003'],
+    ['trailing ideographic space', '<a href=".syzygy/intent/OVERVIEW.md&#x3000;">x</a>', '.syzygy/intent/OVERVIEW.md\u3000'],
+  ];
+  for (const [form, markdown, href] of edgeSpace) {
+    it(`N2 ${form} → ambiguous-target`, () => {
+      expect(extractReadmeEntryLink(markdown, NO_LINK_CONTEXT)).toStrictEqual(ambiguous(href));
+    });
+  }
+
+  it('N2 Unicode edge space on an unrelated link → no', () => {
+    expect(extractReadmeEntryLink('<a href="&#xA0;docs/guide.md">x</a>', NO_LINK_CONTEXT)).toStrictEqual(NO);
+  });
+
+  it('a leading tab, which the parser strips, → yes', () => {
+    expect(
+      extractReadmeEntryLink('<a href="&#9;.syzygy/intent/OVERVIEW.md">x</a>', NO_LINK_CONTEXT),
+    ).toStrictEqual(yes('\t.syzygy/intent/OVERVIEW.md'));
+  });
+
+  // N3: the authority and path are the parser's, not a regex's.
+  it('N3 extra slashes before the host, through the locator → yes', () => {
+    const href = 'https:///forge.example/owner/repo/blob/main/.syzygy/intent/OVERVIEW.md';
+    expect(extractReadmeEntryLink(`[x](${href})`, LOCATOR)).toStrictEqual(yes(href));
+  });
+
+  const sameScheme: readonly (readonly [string, string])[] = [
+    ['same-scheme relative', 'https:.syzygy/intent/OVERVIEW.md'],
+    ['same-scheme relative, upper case', 'HTTPS:.syzygy/intent/OVERVIEW.md'],
+    ['same-scheme root-relative', 'https:/.syzygy/intent/OVERVIEW.md'],
+  ];
+  for (const [form, href] of sameScheme) {
+    it(`N3 ${form} → yes`, () => {
+      expect(extractReadmeEntryLink(`[x](${href})`, NO_LINK_CONTEXT)).toStrictEqual(yes(href));
+    });
+  }
+
+  it('an encoded dot-dot segment inside the root → yes', () => {
+    const href = 'x/%2e%2e/.syzygy/intent/OVERVIEW.md';
+    expect(extractReadmeEntryLink(`[x](${href})`, NO_LINK_CONTEXT)).toStrictEqual(yes(href));
+  });
+
+  it('an encoded dot-dot segment above the root → ambiguous-target', () => {
+    const href = '%2e%2e/.syzygy/intent/OVERVIEW.md';
+    expect(extractReadmeEntryLink(`[x](${href})`, NO_LINK_CONTEXT)).toStrictEqual(ambiguous(href));
+  });
+
+  it('an absolute URL the parser refuses, ending in the entry → ambiguous-target', () => {
+    const href = 'http://[bad/.syzygy/intent/OVERVIEW.md';
+    expect(extractReadmeEntryLink(`<a href="${href}">x</a>`, NO_LINK_CONTEXT)).toStrictEqual(ambiguous(href));
+  });
+
+  // The reader resolves relative hrefs against synthetic bases. An href that
+  // names their host or root directory is still read as what it says.
+  it('an absolute URL on a synthetic base host is absolute → repository-locator-unavailable', () => {
+    for (const host of ['readme-a.invalid/syzygy-root-a', 'readme-b.invalid/syzygy-root-b']) {
+      const href = `https://${host}/.syzygy/intent/OVERVIEW.md`;
+      expect(extractReadmeEntryLink(`[x](${href})`, NO_LINK_CONTEXT)).toStrictEqual(locatorUnavailable(href));
+    }
+  });
+
+  it('a relative path through a synthetic root directory name → no', () => {
+    for (const href of ['/syzygy-root-a/.syzygy/intent/OVERVIEW.md', '../syzygy-root-a/.syzygy/intent/OVERVIEW.md', '../syzygy-root-b/.syzygy/intent/OVERVIEW.md']) {
+      expect(extractReadmeEntryLink(`[x](${href})`, NO_LINK_CONTEXT)).toStrictEqual(NO);
+    }
   });
 });
 
