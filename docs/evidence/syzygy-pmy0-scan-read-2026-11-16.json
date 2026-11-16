@@ -396,8 +396,8 @@
   "note": "One ACK17 execution per source, back to back, via probe.sh. Single measurements under shared load, not bounds.",
   "margin": {
    "drainRatioSubjectToPredecessor": 0.747,
-   "predecessorFailureAt4774Pids": "4.03 s (retained fnry17 attribution, 18 full scans)",
-   "estimateAt4774Pids": "[Inferred] about 3.0 s against the 3 s deadline: effectively no margin under the conditions of the original failure",
+   "predecessorFailureAt4774Pids": "4.03 s: a single instrumented SIGTERM-case attribution run of af485ea3 (the branch intermediate, not main) at 4,774 visible PIDs that was refused at the deadline after 18 full scans (syzygy-pmy0-guardian-outcome-2026-11-14.json). It is the time at refusal, not a completed drain, and its instrumentation overhead is unknown.",
+   "estimateAt4774Pids": "[Unknown] No completion estimate. Scaling that refusal time by the drain17 ratio gives about 3.0 s of work done without completing, on a different case; truncation pushes the true figure up and instrumentation may push it down. A refusal at about 4,774 PIDs under check:all load cannot be ruled out. [Observed] The subject is faster than both af485ea3 and main and behaves like main; the remaining margin is not created by this change.",
    "scaling": "Scan cost still grows with visible PIDs times signals: one full /proc scan per signal plus one per drain round."
   }
  },
@@ -473,7 +473,7 @@
   }
  },
  "tools": {
-  "build_record.py": "957894792933c3612ea4c86bf227a54ffa2924b8d9e551e9339519ed45d35b39",
+  "build_record.py": "3e57c7143e54623894e2dcc083f7f1098ccd6cddabc743d1688d5665e3995b71",
   "differential.py": "42b31b975ee036306901626000460eb0d991fc85d95ec094e617b84faba79a46",
   "drain17.py": "58c41072cf8fdd1801606bb126d03b8c6daaf8b7dbf9eb9f86ba16322bfd25e4",
   "launcher_16.py": "fcbce15920d89940048a93142ad2b15371871c741ea04efee8907fa37927a0d4",

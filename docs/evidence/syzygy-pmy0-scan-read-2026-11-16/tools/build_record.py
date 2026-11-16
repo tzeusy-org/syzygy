@@ -128,9 +128,18 @@ record = {
                 'load, not bounds.',
         'margin': {
             'drainRatioSubjectToPredecessor': round(ratio, 3),
-            'predecessorFailureAt4774Pids': '4.03 s (retained fnry17 attribution, 18 full scans)',
-            'estimateAt4774Pids': f'[Inferred] about {4.03 * ratio:.1f} s against the 3 s deadline: '
-                                  'effectively no margin under the conditions of the original failure',
+            'predecessorFailureAt4774Pids': '4.03 s: a single instrumented SIGTERM-case attribution run of '
+                                            'af485ea3 (the branch intermediate, not main) at 4,774 visible PIDs '
+                                            'that was refused at the deadline after 18 full scans '
+                                            '(syzygy-pmy0-guardian-outcome-2026-11-14.json). It is the time at '
+                                            'refusal, not a completed drain, and its instrumentation overhead is '
+                                            'unknown.',
+            'estimateAt4774Pids': f'[Unknown] No completion estimate. Scaling that refusal time by the drain17 '
+                                  f'ratio gives about {4.03 * ratio:.1f} s of work done without completing, on '
+                                  'a different case; truncation pushes the true figure up and instrumentation '
+                                  'may push it down. A refusal at about 4,774 PIDs under check:all load cannot '
+                                  'be ruled out. [Observed] The subject is faster than both af485ea3 and main '
+                                  'and behaves like main; the remaining margin is not created by this change.',
             'scaling': 'Scan cost still grows with visible PIDs times signals: one full /proc scan per signal '
                        'plus one per drain round.',
         },
